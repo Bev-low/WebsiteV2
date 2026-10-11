@@ -1,0 +1,221 @@
+/*
+ * Beverly Low — image fitting, profile crops, and Films & Photos gallery.
+ *
+ * INSTALL
+ * 1. Put this file beside index.html and styles.css.
+ * 2. In index.html, add this AFTER the existing styles.css link:
+ *    <link rel="stylesheet" href="media-layout.css">
+ *
+ * Keep your existing content.js, app.js, and image folders.
+ * Gallery columns read down each column, then across. Each added photo
+ * uses its natural proportions; no manual cropping or sizing is required.
+ * As with any gallery without stored image dimensions, columns may settle
+ * as the browser loads the photos for the first time.
+ */
+
+:root {
+  --media-backdrop: #fff;
+
+  /* EDIT THESE to tune your banner and portrait. */
+  --banner-height: 320px;          /* Desktop banner height. */
+  --banner-height-mobile: 240px;   /* Banner height on phones. */
+  --banner-position: 50% 55%;     /* Horizontal and vertical crop. */
+  --avatar-zoom: 2;             /* 1 = fill circle; 1.3 = 30% closer. */
+  --avatar-position: 50% 55%;     /* Horizontal and vertical crop. */
+}
+
+body.dark {
+  --media-backdrop: #000;
+}
+
+/* Fit the whole image inside its frame, with a solid theme-aware mat. */
+.thumb .custom-cover,
+.modal-hero .custom-cover {
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: var(--media-backdrop);
+  transform: none;
+  transition: none;
+}
+
+/* A little space also keeps corners clear of the rounded project frame. */
+.project .thumb .custom-cover,
+.modal-hero .custom-cover {
+  padding: 8px;
+}
+
+/* Disable zoom: hovering must not crop the edges of an image. */
+.thumb > svg,
+.project:hover .thumb > svg,
+.film-card:hover .thumb > svg,
+.project:hover .custom-cover,
+.film-card:hover .custom-cover {
+  transform: none;
+  transition: none;
+}
+
+/* Hide the illustration only while a real image is present.
+ * The existing app removes failed images, so its fallback still works.
+ */
+.thumb:has(> img.custom-cover) > svg,
+.modal-hero:has(> img.custom-cover) > svg,
+.avatar:has(> img.avatar-photo) > svg,
+#banner-art:has(> img.banner-photo) > svg {
+  display: none;
+}
+
+/* The banner intentionally fills its frame, unlike project images. */
+.banner {
+  height: var(--banner-height);
+}
+
+.banner-photo {
+  display: block;
+  padding: 0;
+  object-fit: cover;
+  object-position: var(--banner-position);
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* The avatar's existing circular frame clips the enlarged portrait. */
+.avatar-photo {
+  display: block;
+  padding: 0;
+  object-fit: cover;
+  object-position: var(--avatar-position);
+  transform: scale(var(--avatar-zoom));
+  transform-origin: center;
+  transition: none;
+}
+
+/* A photo overlay keeps white lettering readable without white boxes. */
+#banner-art:has(> img.banner-photo)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .16) 60%, rgba(0, 0, 0, .08)),
+    linear-gradient(0deg, rgba(0, 0, 0, .4), transparent 45%);
+}
+
+.banner:has(.banner-photo) .banner-copy,
+.banner:has(.banner-photo) .banner-caption {
+  color: #fff;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .4);
+}
+
+/* Photo and local-video viewers use the same white/black background. */
+.media-stage,
+.lightbox-photo,
+.local-film {
+  background: var(--media-backdrop);
+}
+
+.lightbox-photo,
+.local-film {
+  object-fit: contain;
+  object-position: center;
+}
+
+/* Films & Photos: staggered columns, without changing the project grid. */
+.project-grid.media-grid {
+  display: block;
+  column-count: 3;
+  column-gap: 21px;
+}
+
+.media-grid > .film-card {
+  display: inline-block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 26px;
+  break-inside: avoid;
+  vertical-align: top;
+  overflow-wrap: anywhere;
+}
+
+/* Only real-image cards switch from fixed 16:9 to natural height. */
+.media-grid .film-card .thumb:has(> img.custom-cover) {
+  aspect-ratio: auto;
+  height: auto;
+  border-radius: 0;
+  background: var(--media-backdrop);
+}
+
+.media-grid .film-card .thumb > img.custom-cover {
+  position: static;
+  inset: auto;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  padding: 0;
+  aspect-ratio: auto;
+  object-fit: contain;
+  transform: none;
+  transition: none;
+}
+
+.media-grid > .empty {
+  column-span: all;
+  width: 100%;
+}
+
+@media (max-width: 1000px) {
+  .project-grid.media-grid {
+    column-count: 2;
+    column-gap: 18px;
+  }
+}
+
+@media (max-width: 580px) {
+  .banner {
+    height: var(--banner-height-mobile);
+  }
+
+  .project-grid.media-grid {
+    column-count: 1;
+  }
+
+  .media-grid > .film-card {
+    margin-bottom: 24px;
+  }
+}
+
+@media print {
+  body,
+  body.dark {
+    --media-backdrop: #fff;
+  }
+
+  .project-grid.media-grid {
+    column-count: 1;
+  }
+}
+
+/* Allow the About columns to shrink correctly */
+.about-grid > * {
+  min-width: 0;
+}
+
+/* Keep the photo inside its card */
+.fieldnote-art {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.fieldnote-art img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}

@@ -1,10 +1,3 @@
-/* EDIT YOUR CONTENT HERE.
- * Save this file, then refresh index.html in your browser.
- * Asset paths are relative to index.html, not this JavaScript file.
- * Leave optional image/contact fields blank until you add them.
- * See README.md for photo, video, and project examples.
- * The order of arrays is the order displayed on the website.
- */
 window.PORTFOLIO = {
   "profile": {
     "name": "Beverly Low",
@@ -14,8 +7,8 @@ window.PORTFOLIO = {
     "educationLine": "NUS Computer Engineering",
     "classYear": "2023",
     "location": "Singapore",
-    "avatar": "",
-    "banner": "",
+    "avatar": "assets/images/camera_images/Main.jpg",
+    "banner": "assets/images/camera_images/Banner.jpg",
     "email": "low_beverly@u.nus.edu",
     "linkedin": "https://www.linkedin.com/in/beverly-low-bl/",
     "github": "https://github.com/Bev-low",
@@ -45,8 +38,8 @@ window.PORTFOLIO = {
       ],
       "result": "A complete game with coordinated boards, timed turns, and visual and audio feedback.",
       "url": "https://github.com/Bev-low/EE2026_project/tree/FINAL",
-      "image": "",
-      "imageAlt": ""
+      "image": "assets/images/projects/Crazy_Chess.jpg",
+      "imageAlt": "My FPGA Chess Project"
     },
     {
       "id": "alex",
@@ -71,7 +64,7 @@ window.PORTFOLIO = {
       ],
       "result": "An integrated rescue-robot project connecting perception, control, and physical hardware.",
       "url": "https://github.com/Bev-low/Alex-the-Rescue-Bot",
-      "image": "",
+      "image": "assets/images/projects/Alex.png",
       "imageAlt": ""
     },
     {
@@ -99,7 +92,7 @@ window.PORTFOLIO = {
       "result": "A fitness-tracking application with persistent records and documented software architecture.",
       "url": "https://github.com/AY2425S1-CS2113-W10-3/tp",
       "video": "https://youtu.be/lOtPP37NJ2o",
-      "image": "",
+      "image": "assets/images/projects/buffbuddy.png",
       "imageAlt": ""
     },
     {
@@ -125,7 +118,7 @@ window.PORTFOLIO = {
       ],
       "result": "A robot with directional and curved movement, state-based lighting, and responsive audio.",
       "url": "https://github.com/Bev-low/CG2271/tree/Test/Test",
-      "image": "",
+      "image": "assets/images/projects/CHILD.jpg",
       "imageAlt": ""
     },
     {
@@ -150,7 +143,7 @@ window.PORTFOLIO = {
         "Investigated more compact server layouts and ways to reduce coolant requirements."
       ],
       "result": "The venture has ended. It remains part of my experience exploring a product idea through engineering design.",
-      "image": "",
+      "image": "assets/images/projects/bluehouse.png",
       "imageAlt": ""
     },
     {
@@ -177,7 +170,7 @@ window.PORTFOLIO = {
       "result": "A hackathon web application connecting shopping and administration workflows.",
       "url": "https://github.com/Bev-low/Hack4Good",
       "video": "https://youtu.be/eUklz55i0BY",
-      "image": "",
+      "image": "assets/images/projects/E-Mart.png",
       "imageAlt": ""
     },
     {
@@ -202,7 +195,7 @@ window.PORTFOLIO = {
       ],
       "result": "Finished in the top 10% of competition timings.",
       "url": "https://github.com/Bev-low/Ryan-The-Maze-Runner",
-      "image": "",
+      "image": "assets/images/projects/Ryan.png",
       "imageAlt": ""
     },
     {
@@ -228,15 +221,15 @@ window.PORTFOLIO = {
       ],
       "result": "The lightest robot in the tutorial group, with cardboard wheels saving 5 g per wheel.",
       "video": "https://youtu.be/ShXf9cs_sNk",
-      "image": "",
+      "image": "assets/images/projects/EG1311.png",
       "imageAlt": ""
     },
     {
-      "id": "portfolio-v1",
-      "name": "Portfolio · The First Edition",
+      "id": "Website",
+      "name": "Portfolio",
       "kind": "Software",
       "art": "web",
-      "status": "Previous version",
+      "status": "Completed",
       "tech": [
         "React",
         "JavaScript",
@@ -252,7 +245,7 @@ window.PORTFOLIO = {
         "Deployed the site on Vercel."
       ],
       "result": "A first portfolio bringing my work together online. This redesign is its next chapter.",
-      "url": "https://github.com/Bev-low/website/tree/master/websiteV1",
+      "url": "https://github.com/Bev-low/website/tree/master/WebsiteV2",
       "image": "",
       "imageAlt": ""
     }
@@ -349,6 +342,39 @@ window.PORTFOLIO = {
     }
   ],
   "media": [
+      {
+      "id": "the-world-is-beautiful",
+      "type": "video",
+      "category": "videos",
+      "title": "The World Is Beautiful",
+      "description": "Fun Trip to Iceland.",
+      "url": "https://y2u.be/EWDm5ORr6tk",
+      "thumbnail": "assets/images/others/TheWorldIsBeautiful.jpg",
+      "alt": "",
+      "art": "terminal"
+    },
+      {
+      "id": "Travel-thru-one-year",
+      "type": "video",
+      "category": "videos",
+      "title": "5 Trips, 5 Stories",
+      "description": "Summary of my 20th year.",
+      "url": "https://y2u.be/tJEaiRzKYzM",
+      "thumbnail": "assets/images/others/Travel.webp",
+      "alt": "",
+      "art": "terminal"
+    },
+      {
+      "id": "CHILD#5-demo",
+      "type": "video",
+      "category": "Project demo",
+      "title": "CHILD #5",
+      "description": "Team project demonstration.",
+      "url": "https://y2u.be/0y6Lkh7DaQw",
+      "thumbnail": "assets/images/projects/CHILD.jpg",
+      "alt": "",
+      "art": "terminal"
+    },
     {
       "id": "buffbuddy-demo",
       "type": "video",
@@ -356,7 +382,7 @@ window.PORTFOLIO = {
       "title": "BuffBuddy",
       "description": "Team project demonstration.",
       "url": "https://youtu.be/lOtPP37NJ2o",
-      "thumbnail": "",
+      "thumbnail": "assets/images/projects/buffbuddy.png",
       "alt": "",
       "art": "terminal"
     },
@@ -367,7 +393,7 @@ window.PORTFOLIO = {
       "title": "E-Mini Mart",
       "description": "Team project demonstration.",
       "url": "https://youtu.be/eUklz55i0BY",
-      "thumbnail": "",
+      "thumbnail": "assets/images/projects/E-Mart.png",
       "alt": "",
       "art": "mart"
     },
@@ -378,10 +404,21 @@ window.PORTFOLIO = {
       "title": "Obstacle Robot",
       "description": "Project film · Edited by me.",
       "url": "https://youtu.be/ShXf9cs_sNk",
-      "thumbnail": "",
+      "thumbnail": "assets/images/projects/EG1311.png",
       "alt": "",
       "art": "obstacle"
-    }
+    },
+    {
+      "id": "solo-camp",
+      "type": "photo",
+      "category": "photo",
+      "title": "Solo Camping",
+      "description": "Solo camp on the highest peak (565m) near me in Norway.",
+      "url": "assets/images/hobbies/SoloCamping.jpg",
+      "thumbnail": "assets/images/hobbies/SoloCamping.jpg",
+      "alt": "",
+      "art": "terminal"
+    },
   ],
   "about": {
     "heading": [
