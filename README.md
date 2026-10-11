@@ -1,14 +1,6 @@
 # Beverly’s portfolio
 
-An editable website made with HTML, CSS, and JavaScript. No npm install or build step is needed.
-
-## Open it
-
-1. Unzip the whole folder and keep its files together.
-2. Double-click `index.html` to open the website in your browser.
-3. Edit a file, save it, and refresh the browser to see your changes.
-
-For a smoother editing workflow, open the folder in VS Code and use the Live Server extension: right-click `index.html` → **Open with Live Server**. This is optional.
+Welcome to my website!!!
 
 ## Where to edit
 
@@ -16,10 +8,10 @@ For a smoother editing workflow, open the folder in VS Code and use the Live Ser
 | --- | --- |
 | `index.html` | The page structure and connections to the other files |
 | `styles.css` | Colours, fonts, spacing, and responsive layouts |
-| `js/content.js` | Your profile, projects, experience, and media |
+| `js/content.js` | Profile, projects, experience, and media |
 | `js/app.js` | Navigation, search, filters, dialogs, and remaining page wording |
-| `assets/images/` | Your photos, portrait, banner, and thumbnails |
-| `assets/videos/` | Your own video files |
+| `assets/images/` | Photos, portrait, banner, and thumbnails |
+| `assets/videos/` | Video files |
 
 **Start with `js/content.js`.** It contains `window.PORTFOLIO`, with five main sections: `profile`, `projects`, `experience`, `media`, and `about`. Most content changes only need this file.
 
