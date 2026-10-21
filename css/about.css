@@ -1,0 +1,106 @@
+.about-grid {
+  display: grid;
+  grid-template-columns: 1.5fr 1fr;
+  gap: 40px
+}
+
+.about-main h2 {
+  font-family: Georgia,serif;
+  font-weight: 400;
+  font-size: 45px;
+  line-height: 1.15;
+  letter-spacing: -1.5px;
+  margin: 13px 0 22px
+}
+
+.about-main p {
+  color: var(--muted);
+  font-size: 14px;
+  line-height: 1.95;
+  margin-bottom: 17px
+}
+
+.about-main .lead {
+  font-size: 18px;
+  color: var(--text);
+  line-height: 1.7
+}
+
+.values {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 18px;
+  margin-top: 32px
+}
+
+.value {
+  border-top: 1px solid var(--line);
+  padding-top: 16px
+}
+
+.value .num {
+  color: var(--accent);
+  font-family: Georgia,serif;
+  font-size: 19px
+}
+
+.value h3 {
+  font-size: 13px;
+  margin: 8px 0
+}
+
+.value p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.8
+}
+
+.fieldnote {
+  background: #e9eddf;
+  color: #3c4e3f;
+  border-radius: 12px;
+  overflow: hidden
+}
+
+.fieldnote-art {
+  height: 205px;
+  position: relative
+}
+
+.fieldnote-art svg {
+  height: 100%;
+  width: 100%
+}
+
+.fieldnote-copy {
+  padding: 24px
+}
+
+.fieldnote-copy h3 {
+  font-family: Georgia,serif;
+  font-size: 27px;
+  font-weight: 400;
+  line-height: 1.2;
+  margin: 10px 0 13px
+}
+
+.fieldnote-copy p {
+  font-size: 12px;
+  line-height: 1.9;
+  color: #56634f
+}
+
+.about-tags {
+  margin-top: 16px;
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap
+}
+
+.about-tags span {
+  border: 1px solid var(--line);
+  font-size: 11px;
+  padding: 6px 10px;
+  border-radius: 100px
+}
+

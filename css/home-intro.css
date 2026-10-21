@@ -1,0 +1,91 @@
+.featured-intro {
+  display: grid;
+  grid-template-columns: 1.75fr 1fr;
+  gap: 18px;
+  margin-bottom: 32px
+}
+
+.current {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 23px
+}
+
+.company-icon {
+  width: 55px;
+  height: 55px;
+  border-radius: 12px;
+  background: #f6e9e3;
+  color: #a9462e;
+  display: grid;
+  place-items: center;
+  flex: none
+}
+
+.current .eyebrow {
+  font-size: 9px;
+  color: var(--green);
+  letter-spacing: 1.3px
+}
+
+.status-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--green);
+  margin-right: 5px
+}
+
+.current h2 {
+  font-size: 16px;
+  letter-spacing: -.3px;
+  margin: 6px 0 4px
+}
+
+.current p {
+  font-size: 12px;
+  color: var(--muted);
+  margin-bottom: 9px
+}
+
+.current .text-link {
+  font-size: 11px
+}
+
+.personal-note {
+  padding: 23px;
+  background: #e9eddf;
+  border: 1px solid #dfe5d3;
+  border-radius: 12px;
+  color: #3c4e3f;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center
+}
+
+.personal-note h3 {
+  font-family: Georgia,serif;
+  font-weight: 400;
+  font-size: 23px;
+  line-height: 1.2;
+  margin: 6px 0 8px
+}
+
+.personal-note .eyebrow {
+  font-size: 9px;
+  letter-spacing: 1.5px
+}
+
+.personal-note .text-link {
+  color: #445541;
+  font-size: 11px
+}
+

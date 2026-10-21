@@ -1,0 +1,149 @@
+.topbar {
+  position: sticky;
+  top: 0;
+  height: 72px;
+  padding: 0 30px;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  background: var(--bg);
+  border-bottom: 1px solid var(--line);
+  z-index: 20
+}
+
+.wordmark {
+  font-size: 22px;
+  font-weight: 750;
+  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  white-space: nowrap
+}
+
+.brand-play {
+  width: 29px;
+  height: 22px;
+  border-radius: 7px;
+  background: var(--accent);
+  display: grid;
+  place-items: center
+}
+
+.brand-play:after {
+  content: '';
+  border-left: 8px solid white;
+  border-top: 5px solid transparent;
+  border-bottom: 5px solid transparent;
+  margin-left: 2px
+}
+
+.wordmark small {
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0;
+  color: var(--muted);
+  align-self: flex-start;
+  padding-top: 3px
+}
+
+.search {
+  margin-left: auto;
+  margin-right: auto;
+  width: min(440px,40vw);
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--line);
+  border-radius: 100px;
+  background: var(--surface);
+  height: 40px;
+  overflow: hidden
+}
+
+.search input {
+  border: 0;
+  background: transparent;
+  color: var(--text);
+  min-width: 0;
+  flex: 1;
+  padding: 10px 18px;
+  outline-offset: -4px
+}
+
+.search button {
+  border-left: 1px solid var(--line);
+  height: 100%;
+  width: 51px;
+  display: grid;
+  place-items: center;
+  background: var(--soft)
+}
+
+.top-actions {
+  display: flex;
+  gap: 12px;
+  align-items: center
+}
+
+.icon-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: transparent
+}
+
+.icon-btn:hover {
+  background: var(--soft)
+}
+
+.mini-avatar {
+  display: grid;
+  place-items: center;
+  width: 32px;
+  height: 32px;
+  background: #657359;
+  color: #fff;
+  font-weight: bold;
+  border-radius: 50%;
+  font-size: 11px
+}
+
+.rail {
+  position: fixed;
+  left: 0;
+  top: 88px;
+  width: 82px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 10
+}
+
+.rail button {
+  background: transparent;
+  width: 68px;
+  min-height: 62px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-direction: column;
+  gap: 6px;
+  color: var(--muted);
+  font-size: 10px
+}
+
+.rail button.active,.rail button:hover {
+  background: var(--soft);
+  color: var(--text)
+}
+
+.rail .rail-line {
+  width: 26px;
+  border-top: 1px solid var(--line);
+  margin: 4px 0
+}
+

@@ -1,0 +1,37 @@
+/* Fit the whole image inside its frame, with a solid theme-aware mat. */
+.thumb .custom-cover,
+.modal-hero .custom-cover {
+  display: block;
+  object-fit: contain;
+  object-position: center;
+  background: var(--media-backdrop);
+  transform: none;
+  transition: none;
+}
+
+/* A little space also keeps corners clear of the rounded project frame. */
+.project .thumb .custom-cover,
+.modal-hero .custom-cover {
+  padding: 8px;
+}
+
+/* Disable zoom: hovering must not crop the edges of an image. */
+.thumb > svg,
+.project:hover .thumb > svg,
+.film-card:hover .thumb > svg,
+.project:hover .custom-cover,
+.film-card:hover .custom-cover {
+  transform: none;
+  transition: none;
+}
+
+/* Hide the illustration only while a real image is present.
+ * The existing app removes failed images, so its fallback still works.
+ */
+.thumb:has(> img.custom-cover) > svg,
+.modal-hero:has(> img.custom-cover) > svg,
+.avatar:has(> img.avatar-photo) > svg,
+#banner-art:has(> img.banner-photo) > svg {
+  display: none;
+}
+

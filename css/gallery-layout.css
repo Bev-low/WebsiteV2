@@ -1,0 +1,49 @@
+/* Staggered gallery: real grid columns, with row spans sized by app.js. */
+.project-grid.media-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-auto-rows: 1px;
+  gap: 0 21px;
+  align-items: start;
+}
+
+.media-grid > .film-card {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  margin: 0 0 26px;
+  align-self: start;
+  overflow-wrap: anywhere;
+}
+
+/* Only real-image cards switch from fixed 16:9 to natural height. */
+.media-grid .film-card .thumb:has(> img.custom-cover) {
+  aspect-ratio: auto;
+  height: auto;
+  border-radius: 0;
+  background: var(--media-backdrop);
+}
+
+.media-grid .film-card .thumb > img.custom-cover {
+  position: static;
+  inset: auto;
+  display: block;
+  width: 100%;
+  height: auto;
+  max-height: none;
+  padding: 0;
+  aspect-ratio: auto;
+  object-fit: contain;
+  transform: none;
+  transition: none;
+}
+
+.media-grid > .empty {
+  grid-column: 1 / -1;
+  width: 100%;
+}
+
+
+.project-grid.media-grid:has(> .empty) {
+  grid-auto-rows: auto;
+}

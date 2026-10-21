@@ -1,0 +1,172 @@
+.site {
+  max-width: 1430px;
+  margin-left: 82px;
+  padding: 26px 44px 0
+}
+
+.channel {
+  max-width: 1170px;
+  margin: auto
+}
+
+.banner {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  background: #c6cbbc;
+  border-radius: 13px;
+  height: 228px
+}
+
+.landscape {
+  width: 100%;
+  height: 100%;
+  position: absolute;
+  inset: 0;
+  z-index: -1
+}
+
+.banner-copy {
+  position: absolute;
+  left: 39px;
+  top: 34px;
+  color: #253f38
+}
+
+.eyebrow {
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  font-weight: 700
+}
+
+.banner-copy h2 {
+  font-family: Georgia,serif;
+  font-size: 38px;
+  line-height: 1.08;
+  letter-spacing: -1.2px;
+  font-weight: 400;
+  margin-top: 12px
+}
+
+.banner-caption {
+  position: absolute;
+  right: 24px;
+  bottom: 16px;
+  color: #f3f0da;
+  font-size: 9px;
+  letter-spacing: 2px;
+  text-transform: uppercase
+}
+
+.profile {
+  padding: 28px 0 24px;
+  display: flex;
+  gap: 25px;
+  align-items: center
+}
+
+.avatar {
+  width: 119px;
+  height: 119px;
+  flex: none;
+  position: relative;
+  display: grid;
+  place-items: center;
+  background: #e4e7d8;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 5px solid var(--surface)
+}
+
+.avatar svg {
+  width: 100%;
+  height: 100%
+}
+
+.profile-text {
+  flex: 1
+}
+
+.title-line {
+  display: flex;
+  align-items: center;
+  gap: 12px
+}
+
+.title-line h1 {
+  font-size: 35px;
+  line-height: 1.2;
+  letter-spacing: -1.25px
+}
+
+.location {
+  color: var(--muted);
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-left: auto
+}
+
+.handle {
+  color: var(--muted);
+  margin-top: 5px;
+  font-size: 12px
+}
+
+.profile-bio {
+  margin: 10px 0 12px;
+  max-width: 650px;
+  line-height: 1.65
+}
+
+.text-link {
+  color: var(--green);
+  font-weight: 600;
+  background: none;
+  padding: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px
+}
+
+.text-link:hover {
+  text-decoration: underline
+}
+
+.actions {
+  display: flex;
+  gap: 9px;
+  align-items: center;
+  flex-wrap: wrap
+}
+
+.btn {
+  padding: 9px 17px;
+  border-radius: 100px;
+  font-size: 12px;
+  font-weight: 650;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 37px;
+  background: var(--soft);
+  white-space: nowrap
+}
+
+.btn:hover {
+  filter: brightness(.96)
+}
+
+.btn.primary {
+  background: var(--text);
+  color: var(--surface)
+}
+
+.btn.outline {
+  background: transparent;
+  border: 1px solid var(--line)
+}
+

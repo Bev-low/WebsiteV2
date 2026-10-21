@@ -1,0 +1,137 @@
+.experience-layout {
+  display: grid;
+  grid-template-columns: 1.9fr 1fr;
+  gap: 28px;
+  align-items: start
+}
+
+.timeline {
+  border-left: 1px solid var(--line);
+  margin-left: 8px;
+  padding-left: 23px
+}
+
+.job {
+  position: relative;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+  margin-bottom: 17px
+}
+
+.job:before {
+  content: '';
+  width: 8px;
+  height: 8px;
+  position: absolute;
+  top: 25px;
+  left: -28px;
+  border: 3px solid var(--bg);
+  border-radius: 50%;
+  background: var(--green)
+}
+
+.job summary {
+  list-style: none;
+  cursor: pointer;
+  padding: 18px 21px;
+  display: flex;
+  gap: 12px;
+  align-items: flex-start
+}
+
+.job summary::-webkit-details-marker {
+  display: none
+}
+
+.job summary .job-title {
+  flex: 1
+}
+
+.job h3 {
+  font-size: 15px;
+  margin: 3px 0
+}
+
+.job .role {
+  font-size: 12px;
+  color: var(--muted)
+}
+
+.job .date {
+  font-size: 10px;
+  color: var(--green);
+  font-weight: bold
+}
+
+.job .plus {
+  font-size: 19px;
+  color: var(--muted)
+}
+
+.job[open] .plus {
+  transform: rotate(45deg)
+}
+
+.job-body {
+  padding: 0 21px 22px
+}
+
+.job-body ul,.detail-list {
+  margin: 0 0 15px;
+  padding-left: 17px;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.9
+}
+
+.job-body li+li,.detail-list li+li {
+  margin-top: 7px
+}
+
+.panel {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 23px;
+  margin-bottom: 18px
+}
+
+.panel .eyebrow {
+  color: var(--green);
+  font-size: 9px
+}
+
+.panel h3 {
+  font-size: 17px;
+  line-height: 1.4;
+  margin: 11px 0 6px
+}
+
+.panel p {
+  font-size: 12px;
+  color: var(--muted);
+  line-height: 1.9
+}
+
+.gpa {
+  font-size: 31px;
+  letter-spacing: -1px;
+  margin: 16px 0 0
+}
+
+.gpa span {
+  font-size: 13px;
+  color: var(--muted)
+}
+
+.panel hr {
+  border: 0;
+  border-top: 1px solid var(--line);
+  margin: 18px 0
+}
+
+.panel .tags {
+  margin-top: 12px
+}
+

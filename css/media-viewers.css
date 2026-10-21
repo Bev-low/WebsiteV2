@@ -1,0 +1,13 @@
+/* Photo and local-video viewers use the same white/black background. */
+.media-stage,
+.lightbox-photo,
+.local-film {
+  background: var(--media-backdrop);
+}
+
+.lightbox-photo,
+.local-film {
+  object-fit: contain;
+  object-position: center;
+}
+

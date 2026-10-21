@@ -1,0 +1,38 @@
+@media (max-width: 1000px) {
+  .project-grid.media-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 18px;
+  }
+}
+
+@media (max-width: 580px) {
+  .banner {
+    height: var(--banner-height-mobile);
+  }
+
+  .project-grid.media-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .media-grid > .film-card {
+    margin-bottom: 24px;
+  }
+}
+
+@media print {
+  body,
+  body.dark {
+    --media-backdrop: #fff;
+  }
+
+  .project-grid.media-grid {
+    grid-template-columns: 1fr;
+    grid-auto-rows: auto;
+  }
+
+  .media-grid > .film-card {
+    grid-row: auto !important;
+    break-inside: avoid;
+  }
+}
+

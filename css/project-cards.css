@@ -1,0 +1,93 @@
+.project-grid {
+  display: grid;
+  grid-template-columns: repeat(3,minmax(0,1fr));
+  gap: 27px 21px
+}
+
+.project {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  text-align: left;
+  background: transparent;
+  min-width: 0;
+  border-radius: 12px
+}
+
+.thumb {
+  aspect-ratio: 16/9;
+  border-radius: 11px;
+  overflow: hidden;
+  position: relative;
+  background: var(--soft)
+}
+
+.thumb>svg {
+  width: 100%;
+  height: 100%;
+  transition: transform .4s
+}
+
+.project:hover .thumb>svg,.film-card:hover .thumb>svg {
+  transform: scale(1.035)
+}
+
+.thumb .type {
+  position: absolute;
+  bottom: 10px;
+  right: 10px;
+  font-size: 9px;
+  letter-spacing: .6px;
+  background: #18211ee0;
+  color: #fff;
+  padding: 4px 7px;
+  border-radius: 4px
+}
+
+.project-info {
+  display: flex;
+  gap: 10px;
+  padding-top: 13px
+}
+
+.project-mark {
+  width: 29px;
+  height: 29px;
+  border-radius: 50%;
+  display: grid;
+  place-items: center;
+  background: var(--soft);
+  color: var(--green);
+  flex: none;
+  margin-top: 1px
+}
+
+.project h3 {
+  font-size: 14px;
+  line-height: 1.35;
+  letter-spacing: -.15px;
+  margin-bottom: 4px
+}
+
+.project p {
+  color: var(--muted);
+  font-size: 11px;
+  line-height: 1.6;
+  margin-bottom: 6px
+}
+
+.tags {
+  display: flex;
+  gap: 5px;
+  flex-wrap: wrap
+}
+
+.tag {
+  font-size: 9px;
+  color: var(--muted);
+  background: var(--soft);
+  padding: 3px 7px;
+  border-radius: 5px
+}
+

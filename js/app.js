@@ -13,17 +13,36 @@ if(kind==='cooling'){bg='#c5d9d6';body=`${label('A DIFFERENT DIRECTION.',25,31,'
 if(kind==='mart'||kind==='web'){bg=kind==='mart'?'#dfcbbf':'#dcdcc8';body=`${label(kind==='mart'?'A LITTLE MORE ACCESSIBLE.':'A CORNER OF THE INTERNET.',25,30,'#6e5848')}<rect x="53" y="49" width="294" height="156" rx="7" fill="#faf8f0"/><path d="M53 69h294" stroke="#dad7c7"/><circle cx="67" cy="59" r="3" fill="#c4866c"/><circle cx="78" cy="59" r="3" fill="#b6b995"/><rect x="68" y="83" width="262" height="39" rx="4" fill="${kind==='mart'?'#7c8567':'#abb99a'}"/><text x="80" y="107" fill="#fffbea" font-family="Georgia,serif" font-size="15">${kind==='mart'?'Good things, within reach.':'Build things. Find perspective.'}</text>${[0,1,2].map((n)=>`<rect x="${69+n*89}" y="135" width="80" height="42" rx="3" fill="${['#dfc19c','#b7c1a1','#c4d0c4'][n]}"/><path d="M${69+n*89} 188h63M${69+n*89} 195h39" stroke="#aaa895" stroke-width="3"/>`).join('')}`}
 if(kind==='rtos'){bg='#bfcbd9';body=`${label('EVERY MILLISECOND MATTERS.',25,31,'#3c536b')}<rect x="74" y="52" width="252" height="139" rx="7" fill="#384c63"/><text x="92" y="78" font-size="10" font-family="monospace" fill="#c8d6e7">CHILD #5 / TASK SCHEDULER</text><g stroke="#596d7d">${[100,125,150,175].map(y=>`<path d="M93 ${y}h215"/>`).join('')}</g><g fill="none" stroke-width="3"><path d="M94 111h13V95h35v16h39V95h31v16h44V95h40" stroke="#bbcaa7"/><path d="M94 136h35v-16h37v16h39v-16h35v16h57" stroke="#cfa585"/><path d="M94 161h58v-16h36v16h65v-16h44" stroke="#a6c1cf"/></g>${label('MOTION / LIGHT / SOUND',25,211,'#3c536b',8)}`}
 if(kind==='maze'){bg='#d1d2b8';body=`${label('FIND A WAY THROUGH.',25,31,'#535e40')}<g stroke="#6d7a55" stroke-width="10" fill="none" stroke-linejoin="round"><path d="M76 195V55h247v140H112V89h67v70h73V90h34v68M216 55v69M112 159h35M179 195v-36M323 125h-37"/></g><path d="M92 199V72h105v71h73V73h36v105H162V108h-34v30" fill="none" stroke="#eadfbc" stroke-width="3" stroke-dasharray="5 5"/><rect x="115" y="125" width="26" height="21" rx="5" fill="#a9684c"/><circle cx="121" cy="130" r="3" fill="#eee4c9"/><circle cx="135" cy="130" r="3" fill="#eee4c9"/>`}
+if(kind==='processor'){bg='#d6dfd5';body=`${label('RISC-V / SOFT CORE',25,30,'#3b5548')}<g fill="none" stroke="#78917d" stroke-width="2"><path d="M50 110h60m180 0h60M200 42v25m0 91v35M60 160h50m180 0h45v-50"/></g><rect x="110" y="65" width="180" height="115" rx="8" fill="#304d40"/><rect x="130" y="85" width="65" height="42" rx="4" fill="#aebfa1"/><text x="162" y="111" text-anchor="middle" fill="#233a30" font-size="14" font-family="monospace">ALU</text><g fill="#e5ebdc" font-family="monospace" font-size="10"><text x="211" y="101">CONTROL</text><text x="211" y="119">REGISTERS</text><text x="135" y="153">DATAPATH / MEMORY</text></g>${label('FPGA · PIPELINING IN PROGRESS',25,207,'#3b5548',8)}`}
 return `<svg viewBox="0 0 400 225" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="400" height="225" fill="${bg}"/>${body}</svg>`}
 // Data is kept in content.js so you can edit it without changing the layout.
 const portfolio = window.PORTFOLIO;
 const profile = portfolio.profile;
-const projects = portfolio.projects;
+// Shuffle once per page load so filtering does not move cards around.
+function shuffled(items) {
+  const result = [...items];
+  for (let i = result.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [result[i], result[j]] = [result[j], result[i]];
+  }
+  return result;
+}
+function orderedProjects(items) {
+  const pinned = items.filter(item => item.pinned > 0).sort((a, b) => a.pinned - b.pinned);
+  return [...pinned, ...shuffled(items.filter(item => !(item.pinned > 0)))];
+}
+const projects = orderedProjects(portfolio.projects);
 const jobs = portfolio.experience;
-const media = portfolio.media;
+const media = shuffled(portfolio.media);
 let mediaFilter = 'All';
 let currentMediaId = null;
+let currentPhotoIndex = 0;
+let albumTimer = null;
+const albumIndexes = new Map();
+let galleryResizeObserver = null;
+let galleryLayoutFrame = 0;
 const tabs=[['home','Home'],['projects','Projects'],['experience','Experience'],['films','Films & Photos'],['about','About']];
-let active='home',filter='All',query='',sort='featured',opener=null,toastTimer;
+let active='home',filter='All',query='',opener=null,toastTimer;
 function tagList(tags){return `<div class="tags">${tags.map(t=>`<span class="tag">${esc(t)}</span>`).join('')}</div>`}
 
 // Accept ordinary local asset paths or HTTPS/HTTP links, never executable URLs.
@@ -43,23 +62,101 @@ function visual(image, alt, fallback='web') {
 function projectVisual(project) {
   return visual(project.image, project.imageAlt || project.name, project.art);
 }
+function eventPhotos(item) {
+  if (!item || item.type !== 'photo') return [];
+  const entries = Array.isArray(item.photos) && item.photos.length ? item.photos : [{ src: item.src || item.url || item.thumbnail, alt: item.alt }];
+  return entries.map((photo, index) => ({
+    src: safeAsset(typeof photo === 'string' ? photo : photo.src),
+    alt: (typeof photo === 'string' ? '' : photo.alt) || item.title + ' — photo ' + (index + 1)
+  })).filter(photo => photo.src);
+}
+function photoAlbumCard(item, photos) {
+  const index = (albumIndexes.get(item.id) || 0) % photos.length;
+  return `<article class="film-card photo-album" data-album="${esc(item.id)}">
+    <button class="album-open" data-media="${esc(item.id)}" aria-label="Open ${esc(item.title)} album, ${photos.length} photos">
+    <div class="thumb">${visual(photos[index].src, photos[index].alt, item.art)}<span class="album-position" data-album-counter>${index + 1} / ${photos.length}</span><span class="type">${esc(item.label === 'Photo' ? 'Photo album' : item.label || 'Photo album')} · ${photos.length} photos</span></div>
+    <h3>${esc(item.title)}</h3><p>${esc(item.description || '')}</p></button>
+  </article>`;
+}
+function albumCanAdvance(card, id) {
+  const bounds = card.getBoundingClientRect();
+  return card.isConnected && !document.hidden && !$('#detail').open && !matchMedia('(prefers-reduced-motion: reduce)').matches && bounds.bottom > 0 && bounds.top < innerHeight;
+}
+async function advanceAlbumPreview(card) {
+  const id = card.dataset.album;
+  if (card.dataset.loading || !albumCanAdvance(card, id)) return;
+  const photos = eventPhotos(media.find(item => item.id === id));
+  const current = albumIndexes.get(id) || 0;
+  card.dataset.loading = 'true';
+  try {
+    for (let step = 1; step < photos.length; step++) {
+      const index = (current + step) % photos.length;
+      const candidate = new Image();
+      candidate.src = photos[index].src;
+      try { await candidate.decode(); } catch { continue; }
+      if (!albumCanAdvance(card, id) || (albumIndexes.get(id) || 0) !== current) return;
+      let image = card.querySelector('.custom-cover');
+      if (!image) {
+        image = document.createElement('img');
+        image.className = 'custom-cover';
+        card.querySelector('.thumb').append(image);
+      }
+      image.src = photos[index].src;
+      image.alt = photos[index].alt;
+      albumIndexes.set(id, index);
+      card.querySelector('[data-album-counter]').textContent = (index + 1) + ' / ' + photos.length;
+      return;
+    }
+  } finally { delete card.dataset.loading; }
+}
+function setupAlbumCarousels() {
+  clearInterval(albumTimer);
+  albumTimer = null;
+  const cards = [...document.querySelectorAll('[data-album]')];
+  if (cards.length) albumTimer = setInterval(() => cards.forEach(advanceAlbumPreview), 2000);
+}
 function mediaVisual(item) {
-  return visual(item.thumbnail || (item.type === 'photo' ? item.src : ''), item.alt || item.title, item.art || 'web');
+  const photo = eventPhotos(item)[0];
+  return visual(item.thumbnail || photo?.src, item.alt || photo?.alt || item.title, item.art || 'web');
 }
 function mediaCard(item) {
   const photo = item.type === 'photo';
+  const photos = eventPhotos(item);
+  if (photos.length > 1) return photoAlbumCard(item, photos);
   const url = externalURL(item.url);
   const external = !photo && !safeAsset(item.src) && url;
   const opening = external
     ? `<a class="film-card" href="${esc(url)}" target="_blank" rel="noopener noreferrer" aria-label="Watch ${esc(item.title)} (opens in a new tab)">`
     : `<button class="film-card" data-media="${esc(item.id)}" aria-label="${photo ? 'View photo' : 'Play video'}: ${esc(item.title)}">`;
-  return `${opening}<div class="thumb">${mediaVisual(item)}${photo ? '' : '<span class="play-disc"></span>'}<span class="type">${photo ? 'PHOTO' : external ? 'WATCH VIDEO ↗' : 'PLAY VIDEO'}</span></div><h3>${esc(item.title)}</h3><p>${esc(item.description || item.category || '')}</p>${external ? '</a>' : '</button>'}`;
+  return `${opening}<div class="thumb">${mediaVisual(item)}${photo ? '' : '<span class="play-disc"></span>'}<span class="type">${esc(item.label || (photo ? 'Photo' : item.category === 'Project demo' ? 'Project videos' : 'Fun films'))}</span></div><h3>${esc(item.title)}</h3><p>${esc(item.description || item.category || '')}</p>${external ? '</a>' : '</button>'}`;
 }
 function filteredMedia() {
   return media.filter(item => mediaFilter === 'All'
     || (mediaFilter === 'Videos' && item.type === 'video')
     || (mediaFilter === 'Photos' && item.type === 'photo')
     || (mediaFilter === 'Project demos' && item.category === 'Project demo'));
+}
+// Size staggered cards without CSS columns leaving a desktop column unused.
+function observeMediaGallery() {
+  if (galleryResizeObserver) galleryResizeObserver.disconnect();
+  cancelAnimationFrame(galleryLayoutFrame);
+  const grid = document.querySelector('.media-grid');
+  if (!grid) return;
+  const cards = [...grid.querySelectorAll('.film-card')];
+  const update = () => {
+    if (!grid.isConnected) return;
+    const spans = cards.map(card => Math.ceil(card.getBoundingClientRect().height + parseFloat(getComputedStyle(card).marginBottom)));
+    cards.forEach((card, index) => {
+      const span = 'span ' + spans[index];
+      if (card.style.gridRowEnd !== span) card.style.gridRowEnd = span;
+    });
+  };
+  update();
+  galleryResizeObserver = new ResizeObserver(() => {
+    cancelAnimationFrame(galleryLayoutFrame);
+    galleryLayoutFrame = requestAnimationFrame(update);
+  });
+  cards.forEach(card => galleryResizeObserver.observe(card));
 }
 function mediaGallery() {
   const selected = filteredMedia();
@@ -73,36 +170,78 @@ function showMedia(id) {
   const item = media.find(entry => entry.id === id);
   if (!item) return;
   currentMediaId = id;
-  const src = safeAsset(item.src);
-  const photos = media.filter(entry => entry.type === 'photo');
-  const photoIndex = photos.findIndex(entry => entry.id === id);
   const isPhoto = item.type === 'photo';
+  const photos = eventPhotos(item);
+  currentPhotoIndex = photos.length ? (albumIndexes.get(id) || 0) % photos.length : 0;
+  const photo = photos[currentPhotoIndex];
+  const src = isPhoto ? photo?.src : safeAsset(item.src);
   const mediaElement = isPhoto
-    ? (src ? `<img class="lightbox-photo" src="${esc(src)}" alt="${esc(item.alt || item.title)}">` : '')
-    : (src ? `<video class="local-film" controls playsinline preload="metadata"${safeAsset(item.thumbnail) ? ` poster="${esc(item.thumbnail)}"` : ''} src="${esc(src)}">Your browser does not support this video format.</video>` : '');
-  showModal(item.title, `<div class="media-stage">${mediaElement || '<p>No media file is available for this item.</p>'}<p class="media-error" hidden role="status">This file could not be loaded. Please try again later.</p></div>
-    <div class="media-title"><div><div class="eyebrow">${esc(item.category || 'Personal')} · ${isPhoto ? 'Photography' : 'Video'}</div><h2 id="dialog-title">${esc(item.title)}</h2></div>${isPhoto && photos.length > 1 ? `<div class="photo-navigation"><button class="btn outline" data-media-step="-1" aria-label="Previous photo">←</button><span>${photoIndex + 1} / ${photos.length}</span><button class="btn outline" data-media-step="1" aria-label="Next photo">→</button></div>` : ''}</div><p class="lead">${esc(item.description || '')}</p>`, 'A moment / ' + item.title);
+    ? (src ? `<img class="lightbox-photo" src="${esc(src)}" alt="${esc(photo.alt)}">` : '')
+    : (src ? `<video class="local-film" controls playsinline preload="metadata"${safeAsset(item.thumbnail) ? ' poster="' + esc(item.thumbnail) + '"' : ''} src="${esc(src)}">Your browser does not support this video format.</video>` : '');
+  showModal(item.title, `<div class="media-stage ${isPhoto ? 'photo-stage' : ''}">${mediaElement || '<p>No media file is available for this item.</p>'}<p class="media-error" hidden role="status">This file could not be loaded. Please try another photo.</p></div>
+    <div class="media-title"><div><div class="eyebrow">${esc(item.label || item.category || 'Personal')} · ${isPhoto ? 'Photography' : 'Video'}</div><h2 id="dialog-title">${esc(item.title)}</h2></div>${isPhoto && photos.length > 1 ? `<div class="photo-navigation" aria-label="Album photos"><button class="btn outline" data-media-step="-1" aria-label="Previous photo in ${esc(item.title)}">←</button><span id="photo-counter" aria-live="polite" aria-atomic="true">${currentPhotoIndex + 1} / ${photos.length}</span><button class="btn outline" data-media-step="1" aria-label="Next photo in ${esc(item.title)}">→</button></div>` : ''}</div><p class="lead">${esc(item.description || '')}</p>`, 'A moment / ' + item.title);
 }
 function nextPhoto(step) {
-  const photos = media.filter(item => item.type === 'photo');
-  const index = photos.findIndex(item => item.id === currentMediaId);
-  if (index < 0 || photos.length < 2) return;
-  showMedia(photos[(index + step + photos.length) % photos.length].id);
+  const item = media.find(entry => entry.id === currentMediaId);
+  const photos = eventPhotos(item);
+  if (photos.length < 2) return;
+  currentPhotoIndex = (currentPhotoIndex + step + photos.length) % photos.length;
+  const photo = photos[currentPhotoIndex];
+  const image = document.querySelector('.lightbox-photo');
+  if (!image) return;
+  document.querySelector('.media-error').hidden = true;
+  image.src = photo.src;
+  image.alt = photo.alt;
+  $('#photo-counter').textContent = (currentPhotoIndex + 1) + ' / ' + photos.length;
 }
 
-function card(p){return `<button class="project" data-project="${p.id}" aria-label="Read ${esc(p.name)} case study"><div class="thumb">${projectVisual(p)}<span class="type">${p.kind==='Ventures'?'PAST VENTURE':'CASE STUDY'}</span></div><div class="project-info"><span class="project-mark">${icon(p.kind==='Software'?'projects':p.kind==='Ventures'?'experience':'chip',15)}</span><div><h3>${esc(p.name)}</h3><p>${esc(p.short)}</p>${tagList(p.tech.slice(0,3))}</div></div></button>`}
-function home(){return `<div class="featured-intro"><article class="current"><div class="company-icon">${icon('chip',29)}</div><div><div class="eyebrow"><span class="status-dot"></span>Currently · Espressif Systems</div><h2>Finding the bugs before the silicon.</h2><p>Digital IC verification · SystemVerilog, UVM & C</p><button class="text-link" data-page="experience">Explore my experience ${icon('arrow',13)}</button></div></article><article class="personal-note"><div class="eyebrow">Beyond the work</div><h3>Engineer.<br>Always a human first.</h3><button class="text-link" data-page="about">Meet the person ${icon('arrow',13)}</button></article></div><div class="section-head"><div><h2>Start here</h2><p>A few things I’ve helped bring to life.</p></div><button class="text-link" data-page="projects">All projects ${icon('arrow',14)}</button></div><div class="project-grid">${projects.slice(0,3).map(card).join('')}</div><section class="work-strip"><div class="section-head"><div><h2>Learning by doing</h2><p>From silicon to robots, and the people in between.</p></div><button class="text-link" data-page="experience">My journey ${icon('arrow',14)}</button></div><div class="work-grid"><button class="mini-work" data-job="espressif"><div class="date">2026 — PRESENT</div><h3>Espressif Systems</h3><p>Digital IC Verification</p><strong>25+</strong><small>directed test cases</small></button><button class="mini-work" data-job="august-robotics"><div class="date">2025</div><h3>August Robotics</h3><p>Software Engineering</p><strong>ARM + x86</strong><small>deployment automation</small></button><button class="mini-work" data-job="pixta"><div class="date">2024</div><h3>Pixta Vietnam</h3><p>Content & Videography</p><strong>7+</strong><small>professional shoots led</small></button></div></section><div class="bottom-note"><p>There’s a person behind every problem worth solving.</p><button class="btn outline" data-page="about">My story ${icon('arrow',14)}</button></div>`}
-function projectPage(){const list=projects.filter(p=>(filter==='All'||p.kind===filter)&&[p.name,p.short,p.context,...p.tech].join(' ').toLowerCase().includes(query.toLowerCase()));if(sort==='az')list.sort((a,b)=>a.name.localeCompare(b.name));return `<div class="section-intro"><div><div class="eyebrow">A collection of experiments</div><h2>Things I’ve built.</h2><p>Hardware, software, and ideas that made it off the page. Open a project for the story and my contribution.</p></div></div><div class="filters" aria-label="Project filters">${['All','Hardware','Software','Ventures'].map(f=>`<button class="chip ${filter===f?'active':''}" data-filter="${f}" aria-pressed="${filter===f}">${f}</button>`).join('')}<label class="sort">Sort by <select id="sort"><option value="featured" ${sort==='featured'?'selected':''}>Featured order</option><option value="az" ${sort==='az'?'selected':''}>A–Z</option></select></label></div><div class="result-line" role="status">${list.length} project${list.length!==1?'s':''}${query?' for “'+esc(query)+'”':''}${query?'<button class="text-link" data-clear>Clear search ×</button>':''}</div><div class="project-grid">${list.length?list.map(card).join(''):'<div class="empty"><h3>No projects found</h3><p>Try a technology like Java, ROS, or Verilog.</p><button class="btn" data-reset>Reset filters</button></div>'}</div>`}
+function card(p) {
+  return `<button class="project" data-project="${esc(p.id)}" aria-label="View ${esc(p.name)} details">
+    <div class="thumb">${projectVisual(p)}${p.label ? '<span class="type">' + esc(p.label) + '</span>' : ''}</div>
+    <div class="project-info"><span class="project-mark">${icon(p.kind === 'Software' ? 'projects' : p.kind === 'Ventures' ? 'experience' : 'chip', 15)}</span>
+    <div>${p.pinned > 0 || p.status === 'In progress' ? '<div class="card-flags">' + (p.pinned > 0 ? '<span>Pinned</span>' : '') + (p.status === 'In progress' ? '<span class="progress-label">In progress</span>' : '') + '</div>' : ''}
+    <h3>${esc(p.name)}</h3><p>${esc(p.short)}</p>${tagList(p.tech.slice(0, 3))}</div></div>
+  </button>`;
+}
+function currentProjects() {
+  const ongoing = projects.filter(p => p.status === 'In progress');
+  return ongoing.map(p => `<section class="current-project"><div><div class="eyebrow"><span class="status-dot"></span>Currently building · In progress</div><h2>${esc(p.name)}</h2><p>${esc(p.short)}</p></div><button class="btn outline" data-project="${esc(p.id)}">Explore the project ${icon('arrow', 14)}</button></section>`).join('');
+}
+function home(){return `<div class="featured-intro"><article class="current"><div class="company-icon">${icon('chip',29)}</div><div><div class="eyebrow"><span class="status-dot"></span>Currently · Espressif Systems</div><h2>Finding the bugs before the silicon.</h2><p>Verification & automation · SystemVerilog, UVM & Python</p><button class="text-link" data-page="experience">Explore my experience ${icon('arrow',13)}</button></div></article><article class="personal-note"><div class="eyebrow">Beyond the work</div><h3>Engineer.<br>Always a human first.</h3><button class="text-link" data-page="about">Meet the person ${icon('arrow',13)}</button></article></div>${currentProjects()}<div class="section-head"><div><h2>Start here</h2><p>A few things I’ve helped bring to life.</p></div><button class="text-link" data-page="projects">All projects ${icon('arrow',14)}</button></div><div class="project-grid">${projects.slice(0,3).map(card).join('')}</div><section class="work-strip"><div class="section-head"><div><h2>Learning by doing</h2><p>From silicon to robots, and the people in between.</p></div><button class="text-link" data-page="experience">My journey ${icon('arrow',14)}</button></div><div class="work-grid"><button class="mini-work" data-job="espressif"><div class="date">2026 — PRESENT</div><h3>Espressif Systems</h3><p>Digital IC Verification</p><strong>25+</strong><small>directed test cases</small></button><button class="mini-work" data-job="august-robotics"><div class="date">2025</div><h3>August Robotics</h3><p>Software Engineering</p><strong>ARM + x86</strong><small>deployment automation</small></button><button class="mini-work" data-job="pixta"><div class="date">2024</div><h3>Pixta Vietnam</h3><p>Content & Videography</p><strong>7+</strong><small>professional shoots led</small></button></div></section><div class="bottom-note"><p>There’s a person behind every problem worth solving.</p><button class="btn outline" data-page="about">My story ${icon('arrow',14)}</button></div>`}
+function projectPage(){const list=projects.filter(p=>(filter==='All'||p.kind===filter)&&[p.name,p.short,p.context,p.label,p.status,...p.tech,...(p.nextSteps || [])].join(' ').toLowerCase().includes(query.toLowerCase()));return `<div class="section-intro"><div><div class="eyebrow">A collection of experiments</div><h2>Things I’ve built.</h2><p>Hardware, software, and ideas that made it off the page. Open a project for the story and my contribution.</p></div></div><div class="filters" aria-label="Project filters">${['All','Hardware','Software','Ventures'].map(f=>`<button class="chip ${filter===f?'active':''}" data-filter="${f}" aria-pressed="${filter===f}">${f}</button>`).join('')}</div><div class="result-line" role="status">${list.length} project${list.length!==1?'s':''}${query?' for “'+esc(query)+'”':''}${query?'<button class="text-link" data-clear>Clear search ×</button>':''}</div><div class="project-grid">${list.length?list.map(card).join(''):'<div class="empty"><h3>No projects found</h3><p>Try a technology like Java, ROS, or Verilog.</p><button class="btn" data-reset>Reset filters</button></div>'}</div>`}
 function jobCard(j,i){return `<details class="job" id="job-${esc(j.id)}" ${i<2?'open':''}><summary><div class="job-title"><div class="date">${j.date}</div><h3>${j.company}</h3><div class="role">${j.role}${j.place?' · '+j.place:''}</div></div><span class="plus" aria-hidden="true">+</span></summary><div class="job-body"><ul>${j.points.map(p=>`<li>${p}</li>`).join('')}</ul>${tagList(j.tags)}</div></details>`}
-function experience(){return `<div class="section-intro"><div><div class="eyebrow">The journey so far</div><h2>Work, learn, repeat.</h2><p>Testing systems, building with teams, and learning how to turn an idea into something that works.</p></div><button class="btn outline" data-resume>View résumé ↗</button></div><div class="experience-layout"><div class="timeline">${jobs.map(jobCard).join('')}</div><aside><div class="panel"><div class="eyebrow">Education</div><h3>National University<br>of Singapore</h3><p>Bachelor of Computer Engineering<br>August 2023 – May 2027</p><div class="gpa">4.85 <span>/ 5.00 GPA</span></div><p>Dean’s List · AY24/25 Semester 2</p><hr><p>IEEE-HKN member<br>NOC Vietnam · 3 months<br>NOC Greater Bay Area · 6 months<br>Exchange · Norwegian University of Science and Technology</p></div><div class="panel"><div class="eyebrow">My technical toolkit</div><h3>Across the stack.</h3><p>Verification & hardware</p>${tagList(['SystemVerilog','UVM','Verilog','Vivado','PCB Design'])}<hr><p>Software & systems</p>${tagList(['Python','C/C++','Java','Linux','Bash','ROS','Git','React'])}</div><div class="panel"><div class="eyebrow">Earlier education</div><h3>Hwa Chong Institution</h3><p>February 2021 – November 2022<br>Physics · Chemistry · Mathematics · Economics<br>GCE A Levels · AAA/B · 85/90</p></div></aside></div>`}
+function experience() {
+  const education = portfolio.education;
+  return `<div class="section-intro"><div><div class="eyebrow">The journey so far</div><h2>Work, learn, repeat.</h2><p>Testing systems, building with teams, and turning ideas into tools people can use.</p></div><button class="btn outline" data-resume>View résumé ↗</button></div>
+    <div class="experience-layout"><div class="timeline">${jobs.map(jobCard).join('')}</div><aside>
+    <div class="panel"><div class="eyebrow">Education</div><h3>${esc(education.institution)}</h3><p>${esc(education.degree)}<br>${esc(education.dates)}</p><div class="gpa">${esc(education.gpa)} <span>GPA</span></div><p>${esc(education.achievement)}</p><hr><p>${education.programmes.map(esc).join('<br>')}</p><hr><p>Relevant coursework</p>${tagList(education.coursework)}</div>
+    <div class="panel"><div class="eyebrow">Certification</div>${portfolio.certifications.map(c => '<h3>' + esc(c.name) + '</h3><p>' + esc(c.date) + '</p>').join('')}</div>
+    <div class="panel"><div class="eyebrow">My technical toolkit</div><h3>Across the stack.</h3>${portfolio.skillGroups.map(group => '<p>' + esc(group.name) + '</p>' + tagList(group.items)).join('<hr>')}</div>
+    <div class="panel"><div class="eyebrow">Earlier education</div><h3>Hwa Chong Institution</h3><p>February 2021 – November 2022<br>Physics · Chemistry · Mathematics · Economics<br>GCE A Levels · AAA/B · 85/90</p></div></aside></div>`;
+}
 function films(){const ids=['buffbuddy','e-mini-mart','obstacle'];return `<div class="film-hero"><div class="film-copy"><div class="eyebrow">Through another lens</div><h2>A different way<br>of seeing things.</h2><p>I enjoy finding the story in a place, a person, or something we’ve built. A camera gives me another way to connect.</p><div class="film-stats"><div><strong>30+</strong><span>videos & marketing materials at Pixta</span></div><div><strong>7+</strong><span>professional shoots led</span></div></div></div><div class="film-illustration">${mountains()}<svg viewBox="0 0 400 300" aria-hidden="true"><g transform="rotate(-8 200 170)"><rect x="100" y="101" width="195" height="125" rx="13" fill="#263e35"/><path d="M125 101v-17h43l10 17" fill="#263e35"/><circle cx="203" cy="165" r="47" fill="#758873"/><circle cx="203" cy="165" r="35" fill="#d8dfc2"/><circle cx="203" cy="165" r="27" fill="#3d5b4c"/><circle cx="210" cy="157" r="12" fill="#8aa697" opacity=".6"/><rect x="260" y="115" width="20" height="10" rx="2" fill="#bfab85"/></g></svg></div></div>${mediaGallery()}<div class="work-strip"><div class="section-head"><div><h2>Behind the camera at Pixta</h2><p>Hanoi, Vietnam · May – August 2024</p></div><button class="text-link" data-job="pixta">The full story ${icon('arrow',14)}</button></div><p style="max-width:720px;color:var(--muted);font-size:13px;line-height:1.9">As a Business Incubation Intern, I worked across content strategy, production, and creative direction. I led shoots, coordinated stakeholders, and helped increase production from two to five videos per week.</p></div>`}
-function about(){return `<div class="about-grid"><section class="about-main"><div class="eyebrow" style="color:var(--green)">Hello, I’m ${esc(profile.name.split(" ")[0])}.</div><h2>${portfolio.about.heading.map(esc).join('<br>')}</h2><p class="lead">${esc(portfolio.about.lead)}</p>${portfolio.about.paragraphs.map(text => `<p>${esc(text)}</p>`).join('')}<div class="about-tags">${portfolio.about.interests.map(text => `<span>${esc(text)}</span>`).join('')}</div></section><aside><article class="fieldnote"><div class="fieldnote-art"><img src="assets/images/camera_images/Hiking.jpg" alt="A momment outdoors" loading="lazy"></div><div class="fieldnote-copy"><div class="eyebrow">A note from outside</div><h3>Small human.<br>Big, beautiful world.</h3><p>The outdoors makes my problems feel smaller. I love that feeling of being tiny in a huge landscape. It reminds me to be grateful, look beyond myself, and pay attention to the people around me.</p></div></article><div class="panel" style="margin-top:19px"><div class="eyebrow">Currently</div><h3>Learning. Building. Looking ahead.</h3><p>Digital IC verification at Espressif Systems.<br>Finishing my degree at NUS in May 2027.<br>Exploring where engineering and cloud infrastructure could take me next.</p></div></aside></div><div class="values"><div class="value"><span class="num">01</span><h3>Stay curious.</h3><p>Ask questions. Understand the problem before reaching for a solution.</p></div><div class="value"><span class="num">02</span><h3>Keep showing up.</h3><p>Confidence grows through the small promises I keep to myself.</p></div><div class="value"><span class="num">03</span><h3>Make it matter.</h3><p>Build with people in mind, and stay close enough to listen.</p></div></div><div class="bottom-note"><p>A work in progress.<br>And happy to be one.</p><button class="btn primary" data-contact>Let’s connect ↗</button></div>`}
-function setPage(page,scroll=true,record=true){active=tabs.some(t=>t[0]===page)?page:'home';if(location.hash.slice(1)!==active){try{history[record?'pushState':'replaceState'](null,'','#'+active)}catch{}}$('#tabs').innerHTML=tabs.map(([id,label])=>`<button data-page="${id}" class="${active===id?'active':''}" ${active===id?'aria-current="page"':''}>${label}${id==='projects'?'<span class="count">'+projects.length+'</span>':''}</button>`).join('');$('#rail').innerHTML=tabs.map(([id,label])=>`<button data-page="${id}" class="${active===id?'active':''}" ${active===id?'aria-current="page"':''}>${icon(id)}${label}</button>`).join('')+'<div class="rail-line"></div><button data-resume>'+icon('experience')+'Résumé</button>';$('#content').innerHTML=({home,projects:projectPage,experience,films,about}[active])();$('#content').classList.remove('fade-in');void $('#content').offsetWidth;$('#content').classList.add('fade-in');document.title=`${active==='home'?'Engineer. Curious human.':tabs.find(t=>t[0]===active)[1]} — ${profile.name}`;if(scroll){$('#tabs').scrollIntoView({block:'start'});window.scrollBy(0,-(window.innerWidth<=800?61:72));$('#content').focus({preventScroll:true})}}
-function showModal(title,html,label='A closer look'){if(!$('#detail').open)opener=document.activeElement;$('#dialog-label').textContent=label;$('#dialog-body').innerHTML=html;if(!$('#detail').open)$('#detail').showModal();$('#detail').scrollTop=0;document.body.style.overflow='hidden';$('#close-modal').focus();}
+function about(){return `<div class="about-grid"><section class="about-main"><div class="eyebrow" style="color:var(--green)">Hello, I’m ${esc(profile.name.split(" ")[0])}.</div><h2>${portfolio.about.heading.map(esc).join('<br>')}</h2><p class="lead">${esc(portfolio.about.lead)}</p><div id="about-paragraphs">${portfolio.about.paragraphs.map(text => `<p>${esc(text)}</p>`).join('')}</div><div class="about-tags">${portfolio.about.interests.map(text => `<span>${esc(text)}</span>`).join('')}</div></section><aside><article class="fieldnote"><div class="fieldnote-art"><img src="assets/images/camera_images/Hiking.jpg" alt="A moment outdoors" loading="lazy"></div><div class="fieldnote-copy"><div class="eyebrow">A note from outside</div><h3>Small human.<br>Big, beautiful world.</h3><p>The outdoors makes my problems feel smaller. I love that feeling of being tiny in a huge landscape. It reminds me to be grateful, look beyond myself, and pay attention to the people around me.</p></div></article><div class="panel" style="margin-top:19px"><div class="eyebrow">Currently</div><h3>Learning. Building. Looking ahead.</h3><p>Digital IC verification at Espressif Systems.<br>Finishing my degree at NUS in May 2027.<br>Learning to connect infrastructure, applications, and customer needs.</p></div></aside></div><div class="values"><div class="value"><span class="num">01</span><h3>Stay curious.</h3><p>Ask questions. Understand the problem before reaching for a solution.</p></div><div class="value"><span class="num">02</span><h3>Keep showing up.</h3><p>Confidence grows through the small promises I keep to myself.</p></div><div class="value"><span class="num">03</span><h3>Make it matter.</h3><p>Build with people in mind, and stay close enough to listen.</p></div></div><div class="bottom-note"><p>A work in progress.<br>And happy to be one.</p><button class="btn primary" data-contact>Let’s connect ↗</button></div>`}
+function setPage(page,scroll=true,record=true){active=tabs.some(t=>t[0]===page)?page:'home';if(location.hash.slice(1)!==active){try{history[record?'pushState':'replaceState'](null,'','#'+active)}catch{}}$('#tabs').innerHTML=tabs.map(([id,label])=>`<button data-page="${id}" class="${active===id?'active':''}" ${active===id?'aria-current="page"':''}>${label}${id==='projects'?'<span class="count">'+projects.length+'</span>':''}</button>`).join('');$('#rail').innerHTML=tabs.map(([id,label])=>`<button data-page="${id}" class="${active===id?'active':''}" ${active===id?'aria-current="page"':''}>${icon(id)}${label}</button>`).join('')+'<div class="rail-line"></div><button data-resume>'+icon('experience')+'Résumé</button>';$('#content').innerHTML=({home,projects:projectPage,experience,films,about}[active])();observeMediaGallery();setupAlbumCarousels();$('#content').classList.remove('fade-in');void $('#content').offsetWidth;$('#content').classList.add('fade-in');document.title=`${active==='home'?'Engineer. Curious human.':tabs.find(t=>t[0]===active)[1]} — ${profile.name}`;if(scroll){$('#tabs').scrollIntoView({block:'start'});window.scrollBy(0,-($('.topbar').getBoundingClientRect().height));$('#content').focus({preventScroll:true})}}
+function showModal(title,html,label='A closer look'){if(!$('#detail').open)opener=document.activeElement;$('#dialog-label').textContent=label;$('#dialog-body').innerHTML=html;$('#detail').classList.toggle('resume-dialog',Boolean($('#dialog-body .resume-preview')));if(!$('#detail').open)$('#detail').showModal();$('#detail').scrollTop=0;document.body.style.overflow='hidden';$('#close-modal').focus();}
 function closeModal(){$('#detail').close()}
-$('#detail').addEventListener('close',()=>{document.body.style.overflow='';currentMediaId=null;document.querySelectorAll('#detail video').forEach(video=>video.pause());if(opener&&opener.isConnected)opener.focus({preventScroll:true})});
-function showProject(id){const p=projects.find(p=>p.id===id);if(!p)return;showModal(p.name,`<div class="modal-hero">${projectVisual(p)}</div><div class="eyebrow" style="color:var(--green)">${p.kind} · ${p.status}</div><h2 id="dialog-title">${p.name}</h2><p class="lead">${p.short}</p><div class="actions">${p.url?`<a class="btn primary" href="${p.url}" target="_blank" rel="noopener noreferrer">${icon('github',15)} View source ↗</a>`:''}${p.video?`<a class="btn outline" href="${p.video}" target="_blank" rel="noopener noreferrer">Watch demo ↗</a>`:''}</div><div class="modal-columns"><div><h3>The project</h3><p class="context">${p.context}</p><h3>${p.role==='Team robotics project'?'The team’s work':'My contribution & team context'}</h3><ul class="detail-list">${p.contributions.map(c=>`<li>${c}</li>`).join('')}</ul><h3>Where it landed</h3><p class="context">${p.result}</p></div><aside class="fact-box"><dl><dt>My role</dt><dd>${p.role}</dd><dt>Status</dt><dd>${p.status}</dd><dt>Toolkit</dt><dd>${tagList(p.tech)}</dd></dl></aside></div>`,'Project / '+p.name)}
-function resume(){showModal('Résumé',`<article class="resume"><div class="resume-actions" style="margin-bottom:22px"><button class="btn primary" data-print>Print / save as PDF</button></div><h2 id="dialog-title">${esc(profile.name)}</h2><p class="resume-sub">Computer Engineering · National University of Singapore<br>Graduating May 2027 · Singapore · github.com/Bev-low</p><p style="font-size:12px;line-height:1.8">Experience across digital IC verification, robotics testing, embedded integration, and Linux deployment automation. Interested in engineering roles and developing further in cloud infrastructure.</p><h3>Education</h3><div class="resume-job"><div class="row"><strong>National University of Singapore</strong><span>August 2023 – May 2027</span></div><p>Bachelor of Computer Engineering · GPA 4.85/5.00</p><p>Dean’s List AY24/25 Semester 2 · IEEE-HKN · NOC Vietnam · NOC Greater Bay Area · NTNU exchange</p></div><h3>Experience</h3>${jobs.map(j=>`<section class="resume-job"><div class="row"><strong>${j.company}</strong><span>${j.date}</span></div><p>${j.role}${j.place?' · '+j.place:''}</p><ul>${j.points.map(p=>`<li>${p}</li>`).join('')}</ul></section>`).join('')}<h3>Selected projects</h3>${projects.slice(0,3).map(p=>`<div class="resume-job"><div class="row"><strong>${p.name}</strong><span>${p.tech.slice(0,3).join(' · ')}</span></div><p>${p.role}. ${p.contributions[0]}</p></div>`).join('')}<h3>Technical skills</h3><p style="font-size:11px;line-height:1.9">SystemVerilog · UVM · Verilog · Python · C/C++ · Java · Linux · Bash · ROS · Git · React · JavaScript · PCB design</p></article>`,'Résumé / Beverly Low')}
+$('#detail').addEventListener('close',()=>{document.body.style.overflow='';currentMediaId=null;currentPhotoIndex=0;document.querySelectorAll('#detail video').forEach(video=>video.pause());if(opener&&opener.isConnected)opener.focus({preventScroll:true})});
+function showProject(id){const p=projects.find(p=>p.id===id);if(!p)return;showModal(p.name,`<div class="modal-hero">${projectVisual(p)}</div><div class="eyebrow" style="color:var(--green)">${p.kind} · ${p.status}</div><h2 id="dialog-title">${p.name}</h2><p class="lead">${p.short}</p><div class="actions">${p.url?`<a class="btn primary" href="${p.url}" target="_blank" rel="noopener noreferrer">${icon('github',15)} ${esc(p.sourceLabel || 'View source')} ↗</a>`:''}${p.video?`<a class="btn outline" href="${p.video}" target="_blank" rel="noopener noreferrer">Watch demo ↗</a>`:''}</div><div class="modal-columns"><div><h3>The project</h3><p class="context">${p.context}</p><h3>${p.role==='Team robotics project'?'The team’s work':'My contribution & team context'}</h3><ul class="detail-list">${p.contributions.map(c=>`<li>${c}</li>`).join('')}</ul><h3>${p.status === 'In progress' ? 'Currently working on' : 'Where it landed'}</h3><p class="context">${p.result}</p>${p.nextSteps && p.nextSteps.length ? '<h3>Planned next steps</h3><ul class="detail-list">' + p.nextSteps.map(step => '<li>' + esc(step) + '</li>').join('') + '</ul>' : ''}</div><aside class="fact-box"><dl><dt>My role</dt><dd>${p.role}</dd><dt>Status</dt><dd>${p.status}</dd>${p.date ? '<dt>Timeline</dt><dd>' + esc(p.date) + '</dd>' : ''}<dt>Toolkit</dt><dd>${tagList(p.tech)}</dd></dl></aside></div>`,'Project / '+p.name)}
+function resume() {
+  const pdfURL = profile.resumePdf || 'assets/documents/Low_Beverly_Resume_2026.pdf';
+  if (matchMedia('(max-width: 580px)').matches) {
+    window.open(pdfURL, '_blank', 'noopener,noreferrer');
+    return;
+  }
+  showModal('Résumé', `<section class="resume-preview">
+    <h2 id="dialog-title">${esc(profile.name)} · Résumé</h2>
+    <div class="resume-actions">
+      <a class="btn outline" href="${esc(pdfURL)}" target="_blank" rel="noopener noreferrer">Open in new tab ↗</a>
+      <a class="btn primary" href="${esc(pdfURL)}" download="Low_Beverly_Resume_2026.pdf">Download PDF ↓</a>
+    </div>
+    <p class="resume-preview-help">If the preview doesn’t appear, open the PDF in a new tab or download it.</p>
+    <iframe class="resume-pdf" src="${esc(pdfURL)}#view=FitH" title="Beverly Low résumé PDF"></iframe>
+  </section>`, 'Résumé / Beverly Low');
+}
 function contact() {
   const github = externalURL(profile.github);
   const linkedin = externalURL(profile.linkedin);
@@ -116,13 +255,13 @@ function contact() {
 function toast(message){$('#toast').textContent=message;$('#toast').classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('#toast').classList.remove('show'),3000)}
 function themeUI(){const dark=document.body.classList.contains('dark');$('#theme').innerHTML=icon(dark?'sun':'moon',19);$('#theme').setAttribute('aria-label','Switch to '+(dark?'light':'dark')+' theme');$('meta[name="theme-color"]').content=dark?'#171b18':'#faf9f6'}
 document.addEventListener('click',async e=>{const el=e.target.closest('button,a');if(!el)return;if(el.dataset.page){setPage(el.dataset.page)}else if(el.dataset.mediaFilter){mediaFilter=el.dataset.mediaFilter;setPage('films',false);document.querySelector(`[data-media-filter="${mediaFilter}"]`).focus({preventScroll:true})}else if(el.dataset.media){showMedia(el.dataset.media)}else if(el.dataset.mediaStep){nextPhoto(Number(el.dataset.mediaStep))}else if(el.dataset.project){showProject(el.dataset.project)}else if('resume' in el.dataset){resume()}else if('contact' in el.dataset){contact()}else if(el.dataset.filter){filter=el.dataset.filter;setPage('projects',false);document.querySelector(`[data-filter="${filter}"]`).focus({preventScroll:true})}else if('clear' in el.dataset||'reset' in el.dataset){query='';$('#search-input').value='';if('reset'in el.dataset)filter='All';setPage('projects',false)}else if('job'in el.dataset){setPage('experience',false);const target=$('#job-'+el.dataset.job);target.open=true;target.scrollIntoView({block:'center'});target.querySelector('summary').focus({preventScroll:true})}else if('print'in el.dataset){window.print()}else if('copy'in el.dataset){try{await navigator.clipboard.writeText(profile.website);toast('Portfolio address copied')}catch{$('#portfolio-url').focus();$('#portfolio-url').select();toast('Select and copy the portfolio address')}}});
-$('#search-form').addEventListener('submit',e=>{e.preventDefault();query=$('#search-input').value.trim();filter='All';setPage('projects')});$('#search-input').addEventListener('search',()=>{if(!$('#search-input').value&&query){query='';setPage('projects',false)}});document.addEventListener('change',e=>{if(e.target.id==='sort'){sort=e.target.value;setPage('projects',false);$('#sort').focus({preventScroll:true})}});$('#close-modal').addEventListener('click',closeModal);$('#detail').addEventListener('click',e=>{if(e.target===$('#detail')){const r=$('#detail').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeModal()}});$('#theme').addEventListener('click',()=>{document.body.classList.toggle('dark');try{localStorage.setItem('beverly-theme',document.body.classList.contains('dark')?'dark':'light')}catch{}themeUI()});$('#top').addEventListener('click',()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));window.addEventListener('popstate',()=>{const page=location.hash.slice(1);if(tabs.some(t=>t[0]===page))setPage(page,false,false)});window.addEventListener('hashchange',()=>{const page=location.hash.slice(1);if(tabs.some(t=>t[0]===page)&&page!==active)setPage(page)});$('.skip').addEventListener('click',e=>{e.preventDefault();$('#content').focus();$('#content').scrollIntoView({block:'start'});window.scrollBy(0,-135)});document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'&&!$('#detail').open){e.preventDefault();$('#search-input').focus()}});
+$('#search-form').addEventListener('submit',e=>{e.preventDefault();query=$('#search-input').value.trim();filter='All';setPage('projects')});$('#search-input').addEventListener('search',()=>{if(!$('#search-input').value&&query){query='';setPage('projects',false)}});$('#close-modal').addEventListener('click',closeModal);$('#detail').addEventListener('click',e=>{if(e.target===$('#detail')){const r=$('#detail').getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)closeModal()}});$('#theme').addEventListener('click',()=>{document.body.classList.toggle('dark');try{localStorage.setItem('beverly-theme',document.body.classList.contains('dark')?'dark':'light')}catch{}themeUI()});$('#top').addEventListener('click',()=>window.scrollTo({top:0,behavior:matchMedia('(prefers-reduced-motion: reduce)').matches?'auto':'smooth'}));window.addEventListener('popstate',()=>{const page=location.hash.slice(1);if(tabs.some(t=>t[0]===page))setPage(page,false,false)});window.addEventListener('hashchange',()=>{const page=location.hash.slice(1);if(tabs.some(t=>t[0]===page)&&page!==active)setPage(page)});$('.skip').addEventListener('click',e=>{e.preventDefault();$('#content').focus();$('#content').scrollIntoView({block:'start'});window.scrollBy(0,-($('.topbar').getBoundingClientRect().height+$('#tabs').getBoundingClientRect().height+12))});document.addEventListener('keydown',e=>{if((e.ctrlKey||e.metaKey)&&e.key.toLowerCase()==='k'&&!$('#detail').open){e.preventDefault();$('#search-input').focus()}});
 try{if(localStorage.getItem('beverly-theme')==='dark')document.body.classList.add('dark')}catch{}themeUI();$('#banner-art').innerHTML=mountains();$('#search-button').innerHTML=icon('search',18);$('#github-icon').innerHTML=icon('github',15);$('#location').innerHTML=icon('pin',13)+'Singapore';$('#close-modal').innerHTML=icon('close',19);setPage(location.hash.slice(1)||'home',false,false);
 
 function applyProfile() {
   $('.title-line h1').textContent = profile.name;
   $('.handle').textContent = `${profile.handle} · ${profile.educationLine} · Class of ${profile.classYear}`;
-  $('.profile-bio').innerHTML = `${esc(profile.intro)}<br><span class="more">${esc(profile.subtitle)} </span><button class="text-link" data-page="about">A little more about me <span aria-hidden="true">↗</span></button>`;
+  $('.profile-bio').innerHTML = `${esc(profile.intro)}<br><span class="more">${esc(profile.subtitle)} </span><button class="text-link" data-page="about">A little more about me <span aria-hidden="true">↗</span></button>${profile.careerFocus ? '<span class="career-focus">' + esc(profile.careerFocus) + '</span>' : ''}`;
   $('#location').innerHTML = icon('pin',13) + esc(profile.location);
   const githubLink = document.querySelector('.actions a');
   if (externalURL(profile.github)) githubLink.href = profile.github;
@@ -156,3 +295,25 @@ document.addEventListener('keydown', event => {
   }
 });
 applyProfile();
+
+// Keep the search-help control in sync with click-away and Escape dismissal.
+$('#search-help').addEventListener('toggle', event => {
+  $('#search-help-button').setAttribute('aria-expanded', String(event.newState === 'open'));
+});
+
+// Blank lines in about.txt separate paragraphs; keep the bundled text as a fallback.
+async function loadAboutText() {
+  const file = safeAsset(portfolio.about.paragraphsFile);
+  if (!file) return;
+  try {
+    const response = await fetch(file, { cache: 'no-store' });
+    if (!response.ok) return;
+    const text = (await response.text()).replace(/\r\n?/g, '\n').trim();
+    portfolio.about.paragraphs = text ? text.split(/\n\s*\n/).map(paragraph => paragraph.replace(/\n/g, ' ').trim()).filter(Boolean) : [];
+    const container = document.getElementById('about-paragraphs');
+    if (container) container.innerHTML = portfolio.about.paragraphs.map(paragraph => '<p>' + esc(paragraph) + '</p>').join('');
+  } catch {
+    // Keep the page readable offline or when opened directly as a local HTML file.
+  }
+}
+loadAboutText();

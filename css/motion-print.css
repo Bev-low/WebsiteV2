@@ -1,0 +1,54 @@
+@media(prefers-reduced-motion:reduce) {
+  *,*:before,*:after {
+    scroll-behavior: auto!important;
+    animation: none!important;
+    transition: none!important
+  }
+}
+
+@media print {
+  body {
+    background: white!important;
+    color: #111!important
+  }
+  body>*:not(dialog) {
+    display: none!important
+  }
+  dialog[open] {
+    position: static;
+    display: block;
+    max-height: none;
+    width: 100%;
+    height: auto;
+    border: 0;
+    box-shadow: none;
+    overflow: visible;
+    background: white;
+    color: #111
+  }
+  dialog: :backdrop {
+    display: none
+  }
+  .modal-bar,.resume-actions {
+    display: none!important
+  }
+  .modal-body {
+    padding: 0
+  }
+  .resume {
+    font-size: 10pt
+  }
+  .resume h3 {
+    break-after: avoid
+  }
+  .resume-job {
+    break-inside: avoid
+  }
+  .resume .resume-sub,.resume-job p,.resume-job .row span {
+    color: #333
+  }
+  .resume-job ul {
+    font-size: 9pt
+  }
+}
+

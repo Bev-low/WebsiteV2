@@ -1,0 +1,101 @@
+/* Keep the reading width familiar, centered in the space beside the rail. */
+:root { --header-height: 72px; }
+.site {
+  max-width: none;
+  margin-left: 82px;
+  margin-right: 0;
+}
+.channel, .footer { width: 100%; max-width: 1170px; margin-inline: auto; }
+.profile-text, .project-info > div, .about-grid > *, .experience-layout > * { min-width: 0; }
+.tabs { top: var(--header-height); }
+.topbar { height: var(--header-height); }
+.search-tools {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: min(484px, 42vw);
+  min-width: 0;
+  margin-inline: auto;
+}
+.search-tools .search { width: auto; flex: 1; min-width: 0; margin: 0; }
+.search button { flex-shrink: 0; }
+.search-help-button {
+  flex: none;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  background: var(--surface);
+  color: var(--green);
+  font-size: 16px;
+  font-weight: 700;
+}
+.search-help-button:hover, .search-help-button[aria-expanded="true"] { background: var(--soft); border-color: var(--green); }
+.search-help-button:focus-visible, .search button:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -3px;
+}
+.search-help {
+  position: fixed;
+  inset: calc(var(--header-height) + 10px) auto auto 50%;
+  transform: translateX(-50%);
+  margin: 0;
+  width: min(380px, calc(100vw - 32px));
+  max-height: calc(100dvh - var(--header-height) - 26px);
+  overflow-y: auto;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  color: var(--text);
+  background: var(--surface);
+  box-shadow: var(--shadow);
+  font-size: 13px;
+  line-height: 1.7;
+}
+.search-help-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.search-help h2 { font-size: 16px; }
+.search-help p { margin-top: 10px; }
+.search-help .search-shortcut { color: var(--muted); font-size: 11px; }
+.search-help kbd { font: inherit; padding: 1px 4px; background: var(--soft); border: 1px solid var(--line); border-radius: 4px; }
+@media (max-width: 800px) {
+  :root { --header-height: 61px; }
+  .site { margin-inline: 0; }
+  .wordmark small { display: none; }
+  .top-actions { flex: none; }
+}
+@media (max-width: 580px) {
+  :root { --header-height: 112px; }
+  .topbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    grid-template-rows: 36px 44px;
+    gap: 8px 12px;
+    padding: 12px 15px;
+  }
+  .wordmark { grid-column: 1; grid-row: 1; justify-self: start; }
+  .top-actions { grid-column: 2; grid-row: 1; }
+  .search-tools { grid-column: 1 / -1; grid-row: 2; width: 100%; margin: 0; gap: 8px; }
+  .search-tools .search { height: 44px; }
+  .search input { font-size: 16px; padding-inline: 13px; }
+  .search button { width: 44px; }
+  .search-help-button { width: 44px; height: 44px; }
+  .search-help .icon-btn { width: 36px; height: 36px; }
+  .profile .actions { flex-wrap: wrap; }
+  .personal-note .text-link { position: static; margin-top: 12px; }
+  .title-line h1 { font-size: clamp(23px, 6.9vw, 27px); }
+  .section-head { flex-wrap: wrap; }
+  .footer { flex-wrap: wrap; }
+}
+
+/* Keep career interests visible in the profile on desktop and mobile. */
+.profile-bio .career-focus {
+  display: block;
+  margin-top: 8px;
+  color: var(--green);
+  font-weight: 600;
+}
+
+/* Short filters still fill the viewport below the section tabs. */
+@media screen {
+  .content { min-height: max(380px, calc(100dvh - var(--header-height))); }
+}

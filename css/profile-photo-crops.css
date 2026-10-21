@@ -1,0 +1,47 @@
+/* The banner intentionally fills its frame, unlike project images. */
+.banner {
+  height: var(--banner-height);
+}
+
+.banner-photo {
+  display: block;
+  padding: 0;
+  object-fit: cover;
+  object-position: var(--banner-position);
+  opacity: 1;
+  transform: none;
+  transition: none;
+}
+
+/* The avatar's existing circular frame clips the enlarged portrait. */
+.avatar-photo {
+  display: block;
+  padding: 0;
+  object-fit: cover;
+  object-position: var(--avatar-position);
+  transform: scale(var(--avatar-zoom));
+  transform-origin: center;
+  transition: none;
+}
+
+/* A photo overlay keeps white lettering readable without white boxes. */
+#banner-art:has(> img.banner-photo)::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background:
+    linear-gradient(90deg, rgba(0, 0, 0, .62), rgba(0, 0, 0, .16) 60%, rgba(0, 0, 0, .08)),
+    linear-gradient(0deg, rgba(0, 0, 0, .4), transparent 45%);
+}
+
+.banner:has(.banner-photo) .banner-copy,
+.banner:has(.banner-photo) .banner-caption {
+  color: #fff;
+  background: transparent;
+  border-radius: 0;
+  padding: 0;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, .4);
+}
+

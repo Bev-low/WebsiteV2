@@ -1,0 +1,7 @@
+I’m studying Computer Engineering at NUS, graduating in May 2027. My experience spans chip verification, robotics integration, deployment automation, and content production. I like understanding how systems work and turning that understanding into useful tools.
+
+I’m looking for roles in solutions engineering, technology sales, or solutions architecture, where I can solve technical problems while working closely with people. My engineering and sales experience has taught me to ask questions early, understand requirements, and explain value clearly. I want to build on that foundation by developing demos and proofs of concept, learning from experienced engineers, and helping customers find solutions that fit their needs.
+
+I’m drawn to entrepreneurship and to the infrastructure behind useful products. I earned the AWS Certified Cloud Practitioner certification in November 2024, and I’m interested in cloud computing and long-term data storage. I also use tools such as Claude and ChatGPT to help build software, from engineering workflow tools to this portfolio.
+
+I build trust in myself by showing up. By trying the difficult thing, learning from rejection, and coming back even when the day is messy. I’m still figuring things out. I want to keep learning, be present, and make genuine connections along the way.

@@ -1,0 +1,68 @@
+.work-strip {
+  margin-top: 34px;
+  border-top: 1px solid var(--line);
+  padding-top: 27px
+}
+
+.work-grid {
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 15px
+}
+
+.mini-work {
+  padding: 17px 19px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: var(--surface);
+  text-align: left
+}
+
+.mini-work:hover {
+  background: var(--soft)
+}
+
+.mini-work .date {
+  font-size: 10px;
+  color: var(--muted)
+}
+
+.mini-work h3 {
+  font-size: 13px;
+  margin: 5px 0
+}
+
+.mini-work p {
+  font-size: 11px;
+  color: var(--muted)
+}
+
+.mini-work strong {
+  font-size: 21px;
+  letter-spacing: -.6px;
+  display: block;
+  color: var(--green);
+  margin: 12px 0 0
+}
+
+.mini-work small {
+  font-size: 10px;
+  color: var(--muted)
+}
+
+.bottom-note {
+  padding: 30px 0 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 25px
+}
+
+.bottom-note p {
+  font-family: Georgia,serif;
+  font-size: 23px;
+  letter-spacing: -.3px;
+  max-width: 550px;
+  line-height: 1.4
+}
+

@@ -1,0 +1,29 @@
+.footer {
+  max-width: 1170px;
+  margin: auto;
+  border-top: 1px solid var(--line);
+  padding: 23px 0 28px;
+  color: var(--muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  font-size: 10px
+}
+
+.footer .foot-links {
+  display: flex;
+  gap: 20px
+}
+
+.footer button {
+  padding: 0;
+  background: none;
+  color: var(--muted);
+  font-size: 10px
+}
+
+.footer button:hover,.footer a:hover {
+  color: var(--text)
+}
+

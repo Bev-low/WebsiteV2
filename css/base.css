@@ -1,0 +1,111 @@
+[hidden] { display: none !important; }
+
+:root {
+  --bg: #faf9f6;
+  --surface: #fff;
+  --text: #272923;
+  --muted: #70726a;
+  --line: #e7e7df;
+  --soft: #f0f1eb;
+  --accent: #a9462e;
+  --green: #526554;
+  --shadow: 0 16px 60px #242d2314;
+  color-scheme: light
+}
+
+* {
+  box-sizing: border-box
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--text);
+  font: 14px/1.55 Arial,Helvetica,sans-serif
+}
+
+body.dark {
+  --bg: #171b18;
+  --surface: #202621;
+  --text: #eeeee6;
+  --muted: #adb5aa;
+  --line: #343d35;
+  --soft: #2a322c;
+  --accent: #ef987b;
+  --green: #b2c5a6;
+  --shadow: 0 16px 60px #0005;
+  color-scheme: dark
+}
+
+button,input,select {
+  font: inherit
+}
+
+button,a,input,select {
+  -webkit-tap-highlight-color: transparent
+}
+
+button,a {
+  touch-action: manipulation
+}
+
+button {
+  cursor: pointer
+}
+
+a {
+  color: inherit;
+  text-decoration: none
+}
+
+button: focus-visible,a:focus-visible,input:focus-visible,select:focus-visible,summary:focus-visible {
+  outline: 3px solid #cb7556;
+  outline-offset: 4px
+}
+
+button {
+  color: inherit
+}
+
+button: disabled {
+  cursor: default
+}
+
+svg {
+  display: block
+}
+
+h1,h2,h3,p {
+  margin: 0
+}
+
+button {
+  border: 0
+}
+
+button svg,a svg {
+  flex: none
+}
+
+button: not(.project):not(.film-card),a {
+  transition: background .18s,color .18s,transform .18s
+}
+
+::selection {
+  background: #d8ddc9;
+  color: #20281f
+}
+
+.skip {
+  position: fixed;
+  top: -60px;
+  left: 15px;
+  z-index: 80;
+  padding: 10px;
+  background: var(--surface)
+}
+
+.skip:focus {
+  top: 10px
+}
+

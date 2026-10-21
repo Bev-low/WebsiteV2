@@ -1,0 +1,28 @@
+.mobile-search-label {
+  display: none
+}
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0,0,0,0);
+  white-space: nowrap
+}
+
+.fade-in {
+  animation: enter .25s ease both
+}
+
+@keyframes enter {
+  from {
+    opacity: .2;
+    transform: translateY(5px)
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0)
+  }
+}
+

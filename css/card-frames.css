@@ -1,0 +1,72 @@
+/* Shared frames for project cards and the staggered film/photo gallery. */
+.project,
+.film-card {
+  padding: 10px;
+  border: 1px solid var(--line);
+  background: var(--surface);
+  border-radius: 15px;
+  box-shadow: 0 3px 12px #202b2410;
+  transition: border-color .18s, box-shadow .18s;
+}
+.project { align-self: start; }
+.project:hover,
+.film-card:hover {
+  border-color: var(--green);
+  box-shadow: 0 5px 20px #202b241a;
+}
+.project:focus-visible,
+.film-card:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 4px;
+}
+.project-info { padding: 13px 3px 5px; }
+.card-flags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 5px;
+  color: var(--green);
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .6px;
+  text-transform: uppercase;
+}
+.progress-label { color: var(--accent); }
+.thumb .type {
+  max-width: calc(100% - 20px);
+  white-space: normal;
+  text-transform: uppercase;
+}
+.media-grid .film-card .thumb:has(> img.custom-cover) {
+  border: 1px solid var(--line);
+  border-radius: 7px;
+}
+.film-card h3 { margin: 12px 4px 0; }
+.film-card p { margin: 5px 4px 5px; }
+.current-project {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px;
+  margin-bottom: 30px;
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--green);
+  border-radius: 12px;
+  background: var(--surface);
+}
+.current-project h2 { margin: 8px 0 5px; font-size: 22px; }
+.current-project p { color: var(--muted); font-size: 12px; }
+.current-project .btn { flex: none; }
+@media (max-width: 580px) {
+  .project-grid:not(.media-grid) { grid-template-columns: 1fr; }
+  .project, .film-card { padding: 10px; }
+  .project h3 { font-size: 15px; }
+  .project p { font-size: 12px; }
+  .project .tag { font-size: 10px; }
+  .thumb .type { font-size: 9px; }
+  .current-project { align-items: flex-start; flex-direction: column; padding: 18px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .project, .film-card { transition: none; }
+}

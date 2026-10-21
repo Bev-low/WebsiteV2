@@ -1,0 +1,30 @@
+/*
+ * Beverly Low — image fitting, profile crops, and Films & Photos gallery.
+ *
+ * INSTALL
+ * 1. Put this file beside index.html and styles.css.
+ * 2. In index.html, add this AFTER the existing styles.css link:
+ *    <link rel="stylesheet" href="media-layout.css">
+ *
+ * Keep your existing content.js, app.js, and image folders.
+ * Gallery columns read down each column, then across. Each added photo
+ * uses its natural proportions; no manual cropping or sizing is required.
+ * As with any gallery without stored image dimensions, columns may settle
+ * as the browser loads the photos for the first time.
+ */
+
+:root {
+  --media-backdrop: #fff;
+
+  /* EDIT THESE to tune your banner and portrait. */
+  --banner-height: 320px;          /* Desktop banner height. */
+  --banner-height-mobile: 240px;   /* Banner height on phones. */
+  --banner-position: 50% 55%;     /* Horizontal and vertical crop. */
+  --avatar-zoom: 2;             /* 1 = fill circle; 1.3 = 30% closer. */
+  --avatar-position: 50% 55%;     /* Horizontal and vertical crop. */
+}
+
+body.dark {
+  --media-backdrop: #000;
+}
+

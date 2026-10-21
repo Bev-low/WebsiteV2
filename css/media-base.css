@@ -1,0 +1,95 @@
+/* Optional real photos and the Films & Photos gallery */
+.thumb .custom-cover,.modal-hero .custom-cover {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform .4s;
+}
+
+.modal-hero {
+  position: relative;
+}
+
+.project:hover .custom-cover,.film-card:hover .custom-cover {
+  transform: scale(1.035);
+}
+
+.avatar-photo,.banner-photo {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.banner-photo {
+  opacity: .7;
+}
+
+.contact-actions {
+  margin: 12px 0;
+}
+
+.media-stage {
+  background: var(--soft);
+  border-radius: 11px;
+  overflow: hidden;
+}
+
+.lightbox-photo {
+  display: block;
+  width: 100%;
+  max-height: 65dvh;
+  object-fit: contain;
+}
+
+.local-film {
+  display: block;
+  width: 100%;
+  max-height: 65dvh;
+}
+
+.media-stage>p {
+  padding: 20px;
+}
+
+.media-title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 24px;
+}
+
+.photo-navigation {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: none;
+}
+
+.photo-navigation span {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.media-title .eyebrow {
+  color: var(--green);
+}
+
+.film-card .thumb .play-disc {
+  z-index: 1;
+}
+
+@media(max-width:580px) {
+  .media-title {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+  .photo-navigation {
+    margin-bottom: 15px;
+  }
+}
+

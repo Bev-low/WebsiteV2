@@ -1,0 +1,18 @@
+/* Allow the About columns to shrink correctly */
+.about-grid > * {
+  min-width: 0;
+}
+
+/* Keep the photo inside its card */
+.fieldnote-art {
+  width: 100%;
+  height: auto;
+  overflow: hidden;
+}
+
+.fieldnote-art img {
+  display: block;
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}

@@ -1,0 +1,12 @@
+/* Event previews keep a steady frame while cycling through the album. */
+.album-open { display: block; width: 100%; padding: 0; text-align: left; background: transparent; border-radius: 8px; }
+.album-open:focus-visible { outline: 3px solid var(--accent); outline-offset: 3px; }
+.media-grid .photo-album .thumb,
+.media-grid .photo-album .thumb:has(> img.custom-cover) { aspect-ratio: 3 / 2; height: auto; }
+.media-grid .photo-album .thumb > img.custom-cover { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: contain; }
+.album-position { position: absolute; top: 10px; left: 10px; padding: 4px 7px; border-radius: 4px; background: #18211ee0; color: #fff; font-size: 10px; }
+.photo-stage { position: relative; }
+.photo-stage .lightbox-photo { height: min(60dvh, 640px); width: 100%; object-fit: contain; }
+.photo-stage .media-error { position: absolute; inset: auto 0 0; background: var(--surface); color: var(--text); }
+.photo-navigation .btn { min-width: 44px; min-height: 44px; justify-content: center; }
+@media (max-width: 580px) { .photo-stage .lightbox-photo { height: auto; aspect-ratio: 3 / 2; max-height: 48dvh; } }
