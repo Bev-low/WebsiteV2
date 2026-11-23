@@ -1,0 +1,34 @@
+/* Phone galleries: native horizontal swiping with the next card in view.
+ * Flex layout also ignores desktop masonry grid-row spans in Films & Photos.
+ */
+@media screen and (max-width: 580px) {
+  #content .work-section .work-grid,
+  #content .project-grid {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: stretch;
+    gap: 14px;
+    overflow-x: auto;
+    scroll-snap-type: x mandatory;
+    scroll-padding-inline: 3px;
+    overscroll-behavior-x: contain;
+    padding: 4px 3px 18px;
+    scrollbar-width: thin;
+  }
+  #content .work-section .work-grid > .mini-work,
+  #content .project-grid > .project,
+  #content .project-grid > .film-card {
+    flex: 0 0 85%;
+    min-width: 0;
+    width: 85%;
+    height: auto;
+    margin: 0;
+    align-self: stretch;
+    scroll-snap-align: start;
+  }
+  #content .project-grid > .empty {
+    flex: 0 0 100%;
+    min-width: 0;
+    width: 100%;
+  }
+}

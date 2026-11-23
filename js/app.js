@@ -145,6 +145,11 @@ function observeMediaGallery() {
   const cards = [...grid.querySelectorAll('.film-card')];
   const update = () => {
     if (!grid.isConnected) return;
+    // Phone galleries use native flex scrolling, so masonry sizing is unnecessary.
+    if (getComputedStyle(grid).display === 'flex') {
+      cards.forEach(card => { card.style.gridRowEnd = ''; });
+      return;
+    }
     const spans = cards.map(card => Math.ceil(card.getBoundingClientRect().height + parseFloat(getComputedStyle(card).marginBottom)));
     cards.forEach((card, index) => {
       const span = 'span ' + spans[index];

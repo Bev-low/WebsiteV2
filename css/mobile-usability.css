@@ -1,0 +1,54 @@
+/* Mobile usability layer, loaded after gallery and responsive overrides. */
+button:focus-visible, a:focus-visible, summary:focus-visible, [tabindex="0"]:focus-visible {
+  outline: 3px solid var(--accent);
+  outline-offset: 3px;
+}
+dialog::backdrop { background:#101a16b8; backdrop-filter:blur(4px); }
+@media screen and (max-width:580px) {
+  :root { --header-height:108px; --banner-height-mobile:170px; }
+  .topbar { height:var(--header-height); grid-template-rows:40px 44px; gap:4px 12px; padding:10px 15px; }
+  .icon-btn, .top-actions .icon-btn, #close-modal { width:44px; height:44px; min-width:44px; }
+  .site { padding-inline:12px; }
+  .profile { flex-direction:column; gap:12px; padding:20px 2px; }
+  .avatar { width:72px; height:72px; }
+  .profile-text { width:100%; }
+  .title-line h1 { font-size:30px; }
+  .handle { max-width:none; font-size:13px; line-height:1.7; }
+  .profile-bio { font-size:15px; line-height:1.7; }
+  .profile .actions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+  .btn, .profile .actions .btn { min-height:44px; font-size:13px; padding:10px 14px; white-space:normal; text-align:center; }
+  .tabs { display:grid; grid-template-columns:repeat(5,minmax(0,1fr)); gap:0; overflow:visible; padding:0; }
+  .tabs button { min-width:0; min-height:56px; padding:9px 3px; font-size:11px; white-space:normal; line-height:1.35; }
+  .tabs button.active { background:var(--soft); border-radius:7px 7px 0 0; }
+  .content { padding-top:20px; }
+  .filters { gap:8px; }
+  .chip { min-height:44px; padding:10px 12px; font-size:13px; }
+  .section-head .text-link, .text-link { min-height:44px; align-items:center; font-size:13px; }
+  .home-section .section-head p, .section-intro p, .education-copy p, .film-hero p,
+  .job-body, .panel p, .about-main p, .contact-invitation p { font-size:14px; line-height:1.75; }
+  #content .project h3, #content .film-card h3 { font-size:17px; line-height:1.4; }
+  #content .project p, #content .film-card p, #content .project .card-evidence p { font-size:14px; line-height:1.7; }
+  #content .film-card p { display:block; -webkit-line-clamp:unset; }
+  .tag { font-size:11px; padding:4px 7px; }
+  .work-section .mini-work p, .work-section .work-highlight p { font-size:14px; }
+  .work-read { font-size:13px; }
+  .work-section .section-head::after, .projects-section .section-head::after { content:'Swipe to explore →'; flex-basis:100%; font-size:12px; color:var(--muted); }
+  .section-intro { flex-wrap:wrap; gap:12px; }
+  .journey-controls .btn { min-width:44px; }
+  .journey-photo-track figcaption { font-size:13px; }
+  dialog { width:calc(100% - 16px); max-height:calc(100dvh - 16px); border-radius:14px; overscroll-behavior:contain; }
+  .modal-bar { padding:8px 12px; }
+  .modal-body { padding:20px 18px max(22px,env(safe-area-inset-bottom)); overflow-wrap:anywhere; }
+  .modal-body h2 { font-size:27px; }
+  .modal-body .lead, .modal-body .context, .project-story .detail-list { font-size:15px; line-height:1.8; }
+  .modal-body .actions { gap:8px; }
+  .modal-body .actions .btn { flex:1 1 auto; }
+  .result-note { font-size:13px; }
+  .project-results { padding:18px; }
+  .footer { padding-bottom:max(20px,env(safe-area-inset-bottom)); font-size:12px; }
+  .footer button { min-height:44px; font-size:12px; }
+  .toast { bottom:max(20px,env(safe-area-inset-bottom)); border-radius:12px; font-size:13px; }
+}
+@media (prefers-reduced-motion:reduce) {
+  *, *::before, *::after { scroll-behavior:auto !important; }
+}
