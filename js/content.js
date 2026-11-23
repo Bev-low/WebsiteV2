@@ -1,10 +1,10 @@
-// Edit portfolio content here. classYear and graduationYear are separate; planned project work belongs in nextSteps.
+// Edit portfolio content here. Photo galleries accept { src, alt, caption } entries.
 window.PORTFOLIO = {
   "profile": {
     "name": "Beverly Low",
     "resumePdf": "assets/documents/Low_Beverly_Resume_2026.pdf",
     "handle": "@beverlylow",
-    "intro": "An engineer who cares about the people behind the problems.",
+    "intro": "Connecting engineering, customer needs, and clear communication.",
     "subtitle": "Hardware, software, filmmaking, and a little perspective.",
     "educationLine": "NUS Computer Engineering",
     "classYear": "2023",
@@ -17,7 +17,10 @@ window.PORTFOLIO = {
     "website": "https://www.beverlylow.site/",
     "summary": "Computer Engineering student at NUS, graduating in May 2027, with experience in digital IC verification, robotics integration, deployment automation, and sales. Seeking roles in solutions engineering, technology sales, and solutions architecture that combine technical problem-solving with understanding customer needs and communicating value.",
     "graduationYear": "2027",
-    "careerFocus": "Looking for roles in solutions engineering, technology sales, and solutions architecture."
+    "careerFocus": "Looking for roles in solutions engineering, technology sales, and solutions architecture.",
+    "graduationDate": "May 2027",
+    "filmPortrait": "assets/images/camera_images/camera.jpg",
+    "filmPortraitAlt": "Beverly taking a photograph outdoors"
   },
   "projects": [
     {
@@ -47,8 +50,8 @@ window.PORTFOLIO = {
       "image": "assets/images/projects/Crazy_Chess.jpg",
       "imageAlt": "My FPGA Chess Project",
       "label": "School project",
-      "pinned": 1,
-      "date": "January – May 2025"
+      "date": "January – May 2025",
+      "cardOutcome": "Two FPGA boards connected for a complete chess game."
     },
     {
       "id": "alex",
@@ -76,8 +79,9 @@ window.PORTFOLIO = {
       "image": "assets/images/projects/Alex.png",
       "imageAlt": "",
       "label": "School project",
-      "pinned": 2,
-      "date": "January – May 2024"
+      "date": "January – May 2024",
+      "cardOutcome": "Integrated mapping, navigation, and colour detection.",
+      "pinned": 2
     },
     {
       "id": "buffbuddy",
@@ -106,7 +110,9 @@ window.PORTFOLIO = {
       "video": "https://youtu.be/lOtPP37NJ2o",
       "image": "assets/images/projects/buffbuddy.png",
       "imageAlt": "",
-      "label": "School project"
+      "label": "School project",
+      "cardOutcome": "Persistent workout, meal, and hydration tracking.",
+      "pinned": 3
     },
     {
       "id": "rtos",
@@ -135,8 +141,9 @@ window.PORTFOLIO = {
       "image": "assets/images/projects/CHILD.jpg",
       "imageAlt": "",
       "label": "School project",
-      "pinned": 3,
-      "date": "January – May 2025"
+      "date": "January – May 2025",
+      "video": "https://y2u.be/0y6Lkh7DaQw",
+      "cardOutcome": "Finished in the top 10% of the competition."
     },
     {
       "id": "cooling",
@@ -162,7 +169,25 @@ window.PORTFOLIO = {
       "image": "assets/images/projects/bluehouse.png",
       "imageAlt": "",
       "label": "Past venture · Startathon",
-      "date": "August 2024 – December 2025"
+      "date": "August 2024 – December 2025",
+      "cardOutcome": "Design concepts developed and industry feedback gathered.",
+      "photos": [
+        {
+          "src": "assets/images/experiences/Bluehouse-1.jpg",
+          "alt": "Bluehouse · working with the team",
+          "caption": "Bluehouse · working with the team"
+        },
+        {
+          "src": "assets/images/experiences/Bluehouse-2.jpg",
+          "alt": "Conversations and ideas with the Bluehouse team",
+          "caption": "Conversations and ideas with the Bluehouse team"
+        },
+        {
+          "src": "assets/images/experiences/Bluehouse-3.jpg",
+          "alt": "The Bluehouse team together",
+          "caption": "The Bluehouse team together"
+        }
+      ]
     },
     {
       "id": "e-mini-mart",
@@ -190,7 +215,8 @@ window.PORTFOLIO = {
       "video": "https://youtu.be/eUklz55i0BY",
       "image": "assets/images/projects/E-Mart.png",
       "imageAlt": "",
-      "label": "Hackathon"
+      "label": "Hackathon",
+      "cardOutcome": "Shopping, checkout, and stock management in one app."
     },
     {
       "id": "ryan",
@@ -216,7 +242,8 @@ window.PORTFOLIO = {
       "url": "https://github.com/Bev-low/Ryan-The-Maze-Runner",
       "image": "assets/images/projects/Ryan.png",
       "imageAlt": "",
-      "label": "School project"
+      "label": "School project",
+      "cardOutcome": "Finished in the top 10% of competition timings."
     },
     {
       "id": "obstacle",
@@ -243,7 +270,8 @@ window.PORTFOLIO = {
       "video": "https://youtu.be/ShXf9cs_sNk",
       "image": "assets/images/projects/EG1311.png",
       "imageAlt": "",
-      "label": "School project"
+      "label": "School project",
+      "cardOutcome": "Lightest robot in the tutorial group."
     },
     {
       "id": "Website",
@@ -274,32 +302,38 @@ window.PORTFOLIO = {
       "nextSteps": [
         "Explore cloud hosting for the portfolio, including how the site’s hosting resources are configured and managed.",
         "Write repeatable infrastructure and deployment scripts to automate setup and publishing, using the site as a practical cloud-learning project."
-      ]
+      ],
+      "cardOutcome": "A working portfolio with searchable projects and media."
     },
     {
       "id": "riscv-processor",
-      "name": "RISC-V Processor",
+      "name": "Space Defenders",
       "kind": "Hardware",
       "label": "School project",
       "art": "processor",
-      "status": "In progress",
+      "status": "Completed",
       "tech": [
         "RISC-V",
         "FPGA",
-        "Processor Design"
+        "5-stage pipeline",
+        "Branch prediction",
+        "Nexys 4 DDR"
       ],
-      "short": "Building a RISC-V soft-core processor, from datapath to pipelining.",
-      "context": "An FPGA-based RISC-V soft-core processor developed through coursework, now being extended to explore more advanced processor architecture.",
-      "role": "Processor design & implementation",
+      "short": "A space game running entirely on our custom RISC-V CPU.",
+      "context": "Space Defenders runs entirely on our custom-built RISC-V CPU on a Nexys 4 DDR FPGA board. The five-stage pipeline integrates branch prediction, subword support, and interrupts.",
+      "role": "2-bit bimodal branch prediction",
       "contributions": [
-        "Designed and implemented a RISC-V soft-core processor on FPGA, building core components including the datapath, ALU, control logic, and memory interfaces.",
-        "Reviewed LUT and register utilisation and critical-path timing to explore implementation trade-offs between Booth and conventional multiplication algorithms.",
-        "Currently extending the coursework to processor pipelining and hazard handling, branch prediction, instruction and data caches, and potentially more."
+        "My main contribution was the 2-bit bimodal branch predictor, which predicts branch direction using two-bit saturating counters.",
+        "The team integrated branch prediction, subword support, and interrupts into the five-stage pipelined CPU.",
+        "Ran Space Defenders entirely on the custom CPU on a Nexys 4 DDR board."
       ],
-      "result": "Currently in progress: extending the processor beyond the initial coursework implementation.",
-      "image": "",
-      "imageAlt": "",
-      "date": "August 2026 – Present"
+      "result": "Across the project’s evaluated workload, the combined enhancements reduced CPI from 1.33 to 1.16, with 43.6% fewer cycles, 35.4% fewer instructions, and 75.8% fewer misses.",
+      "image": "assets/images/projects/space-defenders.jpg",
+      "imageAlt": "Space Defenders — processor illustration placeholder",
+      "date": "August – November 2026",
+      "video": "https://youtu.be/9UFTMzGhuns",
+      "cardOutcome": "Team result: CPI reduced from 1.33 to 1.16.",
+      "pinned": 1
     }
   ],
   "experience": [
@@ -317,12 +351,17 @@ window.PORTFOLIO = {
         "Claude AI"
       ],
       "points": [
-        "Develop verification tests for clock/reset and security modules using SystemVerilog, UVM, and C, closing coverage gaps to achieve approximately 99–100% line, branch, and condition coverage in assigned modules.",
-        "Developed 25+ directed tests across five module areas, investigating functional defects with designers and contributing to at least two confirmed design fixes.",
-        "Debug simulation failures with Verdi, tracing signal behaviour and inspecting driver/load connectivity to investigate potential causes in the RTL and testbench.",
-        "Used Claude AI to help build Python scripts for batch regression automation and a simulation-tracking dashboard, translating workflow requirements into tools and consolidating evidence for debugging."
+        "Own and run end-to-end coverage testing for more than 10 modules, from analysing coverage reports to designing targeted tests and investigating failures.",
+        "Develop chip-level integration tests that exercise multiple submodules together, checking their interactions within a single test scenario.",
+        "Find and debug multiple RTL bugs by investigating simulation failures and tracing signal behaviour in Verdi.",
+        "Identify missing coverage in reports and write targeted test cases to exercise untested behaviour, building a suite of more than 100 test cases.",
+        "Use Python regression automation and a simulation-tracking dashboard to organise test runs and consolidate evidence for debugging."
       ],
-      "id": "espressif"
+      "id": "espressif",
+      "highlight": "Verification ownership",
+      "highlightDetail": "End-to-end coverage testing across 10+ modules, chip-level integration, and RTL debugging.",
+      "coverImage": "assets/images/experiences/Espressif-cover.png",
+      "coverAlt": "Espressif Systems"
     },
     {
       "company": "August Robotics",
@@ -342,7 +381,23 @@ window.PORTFOLIO = {
         "Used Linux Bash to automate environment setup, testing, and configuration across the supported platforms.",
         "Developed Python test scripts and ROS drivers to automate validation of 9+ robotic components, troubleshooting serial, Modbus RS485, CAN, and Ethernet communications to resolve hardware–software integration issues."
       ],
-      "id": "august-robotics"
+      "id": "august-robotics",
+      "photos": [
+        {
+          "src": "assets/images/experiences/august.jpg",
+          "alt": "With the team at August Robotics",
+          "caption": "With the team at August Robotics"
+        },
+        {
+          "src": "assets/images/experiences/august-job.jpg",
+          "alt": "Hands-on robotics work at August Robotics",
+          "caption": "Hands-on robotics work at August Robotics"
+        }
+      ],
+      "highlight": "Deployment automation",
+      "highlightDetail": "One-click setup across ARM and x86 for robot assembly engineers.",
+      "coverImage": "assets/images/experiences/august.jpg",
+      "coverAlt": "With the team at August Robotics"
     },
     {
       "company": "Bumblebee HornetX",
@@ -359,7 +414,21 @@ window.PORTFOLIO = {
         "Integrated electrical components with mechanical, control, and propulsion subsystems, coordinating sensor, actuator, and motor interfaces.",
         "Engineered custom PCBs with attention to routing, thermal management, component placement, and durability."
       ],
-      "id": "bumblebee"
+      "id": "bumblebee",
+      "photos": [
+        {
+          "src": "assets/images/experiences/hornetx-teamphoto.jpg",
+          "alt": "Bumblebee HornetX · the team",
+          "caption": "Bumblebee HornetX · the team"
+        },
+        {
+          "src": "assets/images/experiences/hornetx-pcb.jpg",
+          "alt": "Power-system PCB design for HornetX",
+          "caption": "Power-system PCB design for HornetX"
+        }
+      ],
+      "coverImage": "assets/images/experiences/Hornet-cover.png",
+      "coverAlt": "Bumblebee HornetX"
     },
     {
       "company": "Pixta Vietnam",
@@ -377,7 +446,11 @@ window.PORTFOLIO = {
         "Led 7+ professional video shoots as primary videographer, managing stakeholders, timelines, and creative direction.",
         "Developed content formats and campaigns as followers grew from 200 to 4,000 across platforms."
       ],
-      "id": "pixta"
+      "id": "pixta",
+      "highlight": "Creative direction",
+      "highlightDetail": "Led 7+ professional shoots, from content planning to production.",
+      "coverImage": "assets/images/experiences/PIXTA.png",
+      "coverAlt": "Pixta Vietnam"
     },
     {
       "company": "SMV Marketing Group",
@@ -398,6 +471,17 @@ window.PORTFOLIO = {
     }
   ],
   "media": [
+    {
+      "id": "space-defenders-demo",
+      "type": "video",
+      "category": "Project demo",
+      "title": "Space Defenders",
+      "description": "A space game running entirely on our custom RISC-V CPU.",
+      "url": "https://youtu.be/9UFTMzGhuns",
+      "thumbnail": "assets/images/projects/space-defenders.jpg",
+      "art": "processor",
+      "label": "Project videos"
+    },
     {
       "id": "the-world-is-beautiful",
       "type": "video",
@@ -562,9 +646,9 @@ window.PORTFOLIO = {
     "achievement": "Dean’s List · AY24/25 Semester 2",
     "programmes": [
       "IEEE-HKN member",
-      "NOC Vietnam · 3 months",
-      "NOC Greater Bay Area · 6 months",
-      "Exchange · Norwegian University of Science and Technology"
+      "NOC Vietnam · Y1 summer · 3 months · Pixta Vietnam",
+      "NOC Greater Bay Area · Y3 S1 · 6 months · August Robotics & SUSTech",
+      "Exchange · Y3 S2 · Norwegian University of Science and Technology"
     ],
     "coursework": [
       "Computer Networks",
@@ -573,6 +657,130 @@ window.PORTFOLIO = {
       "Data Structures and Algorithms",
       "Software Engineering",
       "Object-Oriented Programming"
+    ],
+    "experiences": [
+      {
+        "id": "nus",
+        "title": "National University of Singapore",
+        "period": "2023–2027",
+        "place": "Singapore",
+        "subtitle": "Computer Engineering",
+        "description": "Studying Computer Engineering at NUS, with coursework spanning computer architecture, digital design, networks, and software engineering. Expected graduation: May 2027.",
+        "photos": [
+          {
+            "src": "assets/images/experiences/NUS-engineering.jpg",
+            "alt": "Engineers at NUS",
+            "caption": "Engineers at NUS"
+          },
+          {
+            "src": "assets/images/experiences/nus-engineering-2.jpg",
+            "alt": "My Digital Design Team",
+            "caption": "My Digital Design Team"
+          },
+          {
+            "src": "assets/images/experiences/nus-raffleshall-ihg.jpg",
+            "alt": "Raffles Hall · Inter-Hall Games",
+            "caption": "Raffles Hall · Inter-Hall Games"
+          }
+        ]
+      },
+      {
+        "id": "ntnu",
+        "title": "Exchange at NTNU",
+        "period": "Y3 S2",
+        "place": "Norway",
+        "subtitle": "Norwegian University of Science and Technology",
+        "description": "Spent Year 3 Semester 2 on exchange at the Norwegian University of Science and Technology. A chapter of studying abroad and exploring Norway, including a solo camping trip near Trondheim.",
+        "photos": [
+          {
+            "src": "assets/images/experiences/NTNU-main.jpg",
+            "alt": "Welcome to NTNU",
+            "caption": "Welcome to NTNU - I am wearing Norway's National Costume"
+          },
+          {
+            "src": "assets/images/experiences/NTNU-national.jpg",
+            "alt": "Celebrating Norway's National Day",
+            "caption": "Celebrating Norway's National Day"
+          },
+          {
+            "src": "assets/images/experiences/NTNU-lapland.jpg",
+            "alt": "Learning to Ice Fish in Lapland",
+            "caption": "Learning to ice fish in Lapland"
+          },
+          {
+            "src": "assets/images/experiences/NTNU-africa.jpg",
+            "alt": "Travel memories from my exchange chapter",
+            "caption": "Travel memories from my exchange chapter"
+          }
+        ]
+      },
+      {
+        "id": "gba",
+        "title": "NOC Greater Bay Area",
+        "period": "Y3 S1 · 6 months",
+        "place": "Shenzhen, China",
+        "subtitle": "August Robotics + SUSTech",
+        "description": "Spent six months in Shenzhen through NUS Overseas Colleges, interning at August Robotics while studying at Southern University of Science and Technology (SUSTech). My internship connected robotics integration with deployment automation.",
+        "job": "august-robotics",
+        "photos": [
+          {
+            "src": "assets/images/experiences/GBA-72floor.jpg",
+            "alt": "72 level building in Zhang Jia Jiea",
+            "caption": "72 level building in Zhang Jia Jie"
+          },
+          {
+            "src": "assets/images/experiences/GBA-Taichi.jpg",
+            "alt": "Learning tai chi from a master",
+            "caption": "Learning tai chi from a master"
+          },
+          {
+            "src": "assets/images/experiences/GBA-wutongshan.jpg",
+            "alt": "Hiking Wutongshan with friendly uncles and aunties I met along the way",
+            "caption": "Hiking Wutongshan with friendly uncles and aunties I met along the way"
+          },
+          {
+            "src": "assets/images/experiences/Shenzhen-HitechFair.jpg",
+            "alt": "Attending Shenzhen’s Hi-Tech Fair 2025",
+            "caption": "Attending Shenzhen’s Hi-Tech Fair 2025"
+          },
+          {
+            "src": "assets/images/experiences/Shenzhen-HitechFair-2.jpg",
+            "alt": "Technology on display at the Hi-Tech Fair",
+            "caption": "Technology on display at the Hi-Tech Fair"
+          },
+          {
+            "src": "assets/images/experiences/Shenzhen-MakerFair.jpg",
+            "alt": "A visit to Shenzhen’s Maker Fair 2025",
+            "caption": "A visit to Shenzhen’s Maker Fair 2025"
+          }
+        ]
+      },
+      {
+        "id": "vietnam",
+        "title": "NOC Vietnam",
+        "period": "Y1 summer · 3 months",
+        "place": "Hanoi, Vietnam",
+        "subtitle": "Pixta Vietnam",
+        "description": "Joined NUS Overseas Colleges in Vietnam during my Year 1 summer, spending three months working at Pixta Vietnam. My work spanned content strategy, videography, and creative direction.",
+        "job": "pixta",
+        "photos": [
+          {
+            "src": "assets/images/experiences/Vietnam-main.jpg",
+            "alt": "NOC Vietnam · Me and my CoWorkers",
+            "caption": "NOC Vietnam · Me and my CoWorkers"
+          },
+          {
+            "src": "assets/images/experiences/Vietnam-HLB.jpg",
+            "alt": "At Ha Long Bay- Vietnam",
+            "caption": "At Ha Long Bay- Vietnam"
+          },
+          {
+            "src": "assets/images/experiences/Vietnam-grab.jpg",
+            "alt": "A glimpse of everyday travel in Vietnam",
+            "caption": "A glimpse of everyday travel in Vietnam"
+          }
+        ]
+      }
     ]
   },
   "certifications": [

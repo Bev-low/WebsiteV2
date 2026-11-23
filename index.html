@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width,initial-scale=1">
-    <meta name="theme-color" content="#faf9f6">
+    <meta name="theme-color" content="#171b18">
     <meta name="description" content="Beverly Low — Computer Engineering at NUS. Hardware, software, filmmaking, and a little perspective.">
     <title>
       Beverly Low — Engineer. Curious human.
@@ -11,7 +11,8 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="media-layout.css">
   </head>
-  <body>
+  <body class="dark">
+    <script>try { document.body.classList.toggle("dark", localStorage.getItem("beverly-theme") !== "light"); } catch {}</script>
     <a class="skip" href="#content">Skip to content</a>
     <!-- HEADER: wordmark, search, theme button -->
     <header class="topbar">
@@ -71,10 +72,10 @@
               <span class="location" id="location"></span>
             </div>
             <p class="handle">
-              @beverlylow · NUS Computer Engineering · Class of 2023
+              @beverlylow · NUS Computer Engineering · Graduating May 2027
             </p>
             <p class="profile-bio">
-              An engineer who cares about the people behind the problems.<br><span class="more">Hardware, software, filmmaking, and a little perspective. </span><button class="text-link" data-page="about">A little more about me <span aria-hidden="true">↗</span></button><span class="career-focus">Looking for roles in solutions engineering, technology sales, and solutions architecture.</span>
+              Connecting engineering, customer needs, and clear communication.<br><span class="more">Hardware, software, filmmaking, and a little perspective. </span><button class="text-link" data-page="about">A little more about me <span aria-hidden="true">↗</span></button><span class="career-focus">Looking for roles in solutions engineering, technology sales, and solutions architecture.</span>
             </p>
             <div class="actions">
               <button class="btn primary" data-resume>View résumé</button><button class="btn outline" data-contact>Let's connect <span aria-hidden="true">↗</span></button><a class="btn" href="https://github.com/Bev-low" target="_blank" rel="noopener noreferrer" aria-label="Beverly on GitHub (opens in a new tab)"><span id="github-icon"></span><span class="github-text">GitHub</span></a>
